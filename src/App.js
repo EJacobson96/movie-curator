@@ -9,9 +9,6 @@ import Controller from './DataController'
 import 'whatwg-fetch';
 
 class App extends Component {
-
-
-
   render() {
     Controller.search('Arrival');
     return (
@@ -23,6 +20,7 @@ class App extends Component {
               <Link href="">Recommended Movies</Link>
               <Link href="">Movie Watchlist</Link>
               <Link href="">Search For Movies</Link>
+              <Link href="">Inbox</Link>
             </Navigation>
           </Drawer>
           {this.props.children}
