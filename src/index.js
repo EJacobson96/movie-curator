@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 import { Router, Route, hashHistory } from 'react-router';
+import SignIn from './SignIn';
 
 import firebase from 'firebase';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -21,7 +22,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="list" component={DogList} />
+      <Route path="login" component={SignIn} />
     </Route>
   </Router>,
   document.getElementById('root')
