@@ -25,7 +25,7 @@ class App extends Component {
               <Link href="">Search For Movies</Link>
             </Navigation>
           </Drawer>
-          <Content />
+          {this.props.children}
         </Layout>
       </div>
     );
