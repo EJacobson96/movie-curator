@@ -21,7 +21,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="list" component={DogList} />
+      {/*<Route path="list" component={DogList} />*/}
     </Route>
   </Router>,
   document.getElementById('root')
