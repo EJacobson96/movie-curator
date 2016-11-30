@@ -3,11 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 import { Router, Route, hashHistory } from 'react-router';
-<<<<<<< HEAD
-=======
 import SignIn from './SignIn';
 
->>>>>>> f08db79d544d1a881abfc5faa990ee542c14b3f1
 import firebase from 'firebase';
 
 import 'react-mdl/extra/material.css';
@@ -28,11 +25,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-<<<<<<< HEAD
-
-=======
       <Route path="login" component={SignIn} />
->>>>>>> f08db79d544d1a881abfc5faa990ee542c14b3f1
     </Route>
   </Router>,
   document.getElementById('root')
