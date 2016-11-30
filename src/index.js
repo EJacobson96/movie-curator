@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 import { Router, Route, hashHistory } from 'react-router';
-
 import firebase from 'firebase';
+
+import 'react-mdl/extra/material.css';
+import 'react-mdl/extra/material.js';
 import 'bootstrap/dist/css/bootstrap.css';
 
 
@@ -21,7 +23,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="list" component={DogList} />
+
     </Route>
   </Router>,
   document.getElementById('root')
