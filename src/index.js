@@ -2,14 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import SignIn from './SignIn';
-
+import WatchList from './WatchList';
 import firebase from 'firebase';
 
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
 import 'bootstrap/dist/css/bootstrap.css';
+import './App.css';
 
 
 // Initialize Firebase
@@ -25,7 +26,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="login" component={SignIn} />
+      <IndexRoute component={WatchList} />
+      <Route path="/watchlist" component={WatchList} />
     </Route>
   </Router>,
   document.getElementById('root')

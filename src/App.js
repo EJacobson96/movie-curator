@@ -10,7 +10,10 @@ import 'whatwg-fetch';
 
 class App extends Component {
   render() {
-    Controller.search('Arrival');
+    Controller.search('Arrival')
+    .then((data) => {
+      console.log(data);
+    })
     return (
       <div>
         <Layout fixedDrawer>
@@ -23,7 +26,9 @@ class App extends Component {
               <Link href="">Inbox</Link>
             </Navigation>
           </Drawer>
-          {this.props.children}
+          <Content>
+            {this.props.children}
+          </Content>
         </Layout>
       </div>
     );

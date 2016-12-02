@@ -14,10 +14,7 @@ var controller = {
         return fetch(uri)
             .then((response) => {
                 return response.json();
-            }).then((data) => {
-                console.log(data);
-                return data;
-            }).catch((err) => console.log(err));
+            })
 
     }
 

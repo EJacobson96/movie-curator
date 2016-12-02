@@ -45,3 +45,34 @@
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
+
+img {
+  height: 316px;
+  width: 212px;
+  margin-right: 20px;
+  float: left;
+
+}
+
+.cardSection {
+  background-color: #f2f2f2;
+  width: 434px;
+  height: 316px;
+  margin-left: 232px;
+}
+
+.movieCard h2 {
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+#root button {
+  background-color: #d9d9d9;
+  border-color: #d9d9d9;
+}
+
+button p {
+  margin: 0px;
+  float: left;
+  margin-right: 5px;
+}
