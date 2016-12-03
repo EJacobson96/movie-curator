@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
-import SignIn from './SignIn';
+import SignInForm from './SignIn';
+import SignUpForm from './SignUp';
 import WatchList from './WatchList';
 import firebase from 'firebase';
 
@@ -26,9 +27,11 @@ import './App.css';
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <IndexRoute component={WatchList} />
-      <Route path="/watchlist" component={WatchList} />
+      <IndexRoute component={SignInForm} />
+      <Route path="watchlist" component={WatchList} />
     </Route>
+    <Route path="join" component={SignUpForm} />
+    <Route path="login" component={SignInForm} />
   </Router>,
   document.getElementById('root')
 );

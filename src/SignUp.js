@@ -44,7 +44,7 @@ signUpCallBack(email, password, handle, avatar) {
     /* Create a new user and save their information */
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function(firebaseUser) {
-        hashHistory.push('channels');
+        hashHistory.push('watchlist');
         //include information (for app-level content)
         var profilePromise = firebaseUser.updateProfile({
           displayName: handle,
@@ -55,7 +55,7 @@ signUpCallBack(email, password, handle, avatar) {
 				var userRef = firebase.database().ref('users/'+firebaseUser.uid); 
         var userData = {
           handle:handle,
-          avatar:'https://www.gravatar.com/avatar/' + md5(email)
+          avatar:'https://www.gravatar.com/avatar/' + md5(email),
         }
         var userPromise = userRef.set(userData); //update entry in JOITC, return promise for chaining
         return Promise.all(profilePromise, userPromise); //do both at once!
