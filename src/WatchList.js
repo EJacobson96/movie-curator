@@ -35,7 +35,8 @@ class MovieData extends Component {
         })
         .catch((err) => console.log(err));
     }
-    
+
+
     render() {
         return (
             <div>
@@ -60,6 +61,13 @@ class Movies extends Component {
 }
 
 class MovieCard extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            watchlist:false,
+            favorited:false
+        }
+    }
     saveMovie(poster, title, overview) {
         //var moviesRef = firebase.database().ref('Watchlist'); //the messages in the JOITC
         var userRef = firebase.database().ref('users/'+ firebase.auth().currentUser.uid + '/Watchlist'); 
@@ -69,17 +77,23 @@ class MovieCard extends Component {
             MovieOverview: overview
         };
         userRef.push(newMovie);
+        this.setState({
+            watchlist: true,
+            favorited: this.state.favorited
+        });
     }
 
     render() {
         var favorites = null;
+        // if (this.state.))
         return (
             <div className="movieCard">
                 <div className="imgSection"><img src={'https://image.tmdb.org/t/p/original/' + this.props.movie.poster_path} role='presentation'/></div>
                 <div className="cardSection">
                     <h2>{this.props.movie.original_title}</h2>
                     <p>{this.props.movie.overview}</p>    
-                    <button className="btn btn-primary" onClick={()=> this.saveMovie(this.props.movie.poster_path, this.props.movie.original_title, this.props.movie.overview)}><p>Add to WatchList</p><i className="material-icons">add_to_queue</i></button>  
+                    <button className="btn btn-primary" onClick={()=> this.saveMovie(this.props.movie.poster_path, this.props.movie.original_title, this.props.movie.overview)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button> 
+                    <button className="btn btn-primary" onClick={()=> this.saveMovie(this.props.movie.poster_path, this.props.movie.original_title, this.props.movie.overview)}><p>Favorite</p><i className="material-icons">favorite_border</i></button> 
                     {favorites}           
                 </div>
             </div>
