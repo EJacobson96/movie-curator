@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Button } from 'react-mdl';
+import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Button, Badge } from 'react-mdl';
 import { Link, hashHistory } from 'react-router';
 import SignIn from './SignIn';
 import Inbox from './Inbox';
@@ -15,10 +15,15 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { openInbox: true };
+    this.state = { openInbox: false };
 
     this.handleOpenInbox = this.handleOpenInbox.bind(this);
     this.handleCloseInbox = this.handleCloseInbox.bind(this);
+  }
+
+  // Signs the user out
+  signOut() {
+    firebase.auth().signOut();
   }
 
   componentDidMount() {
@@ -34,7 +39,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    if(this.unregister) {
+    if (this.unregister) {
       this.unregister();
     }
   }
@@ -49,6 +54,7 @@ class App extends Component {
 
 
   render() {
+
     console.log('user on app', this.state.userId);
     return (
       <div>
@@ -59,8 +65,15 @@ class App extends Component {
               <Link href="">Recommended Movies</Link>
               <Link href="">Movie Watchlist</Link>
               <Link href="">Search For Movies</Link>
-              <Link onClick={() => { this.handleOpenInbox() } }>Inbox</Link>
             </Navigation>
+            <div className="bottomNav">
+              <Badge id="inboxBadge" text="..." overlap>
+                <Link onClick={() => { this.handleOpenInbox() } }>
+                  <i className="fa fa-inbox" aria-hidden="true"></i>
+                </Link>
+              </Badge>
+              <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>
+            </div>
           </Drawer>
           <Content>
             {this.props.children}
@@ -69,7 +82,7 @@ class App extends Component {
         <Dialog open={this.state.openInbox}>
           <DialogTitle>Inbox</DialogTitle>
           <DialogContent>
-            <Inbox userId={this.state.userId} />
+            <Inbox updateParent={this.updateState} userId={this.state.userId} />
           </DialogContent>
           <DialogActions>
             <Button type='button' onClick={this.handleCloseInbox}>Close</Button>
