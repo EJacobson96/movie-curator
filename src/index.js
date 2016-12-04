@@ -15,14 +15,14 @@ import './App.css';
 
 
 // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBeR0rvkB8aPUDIOBoxxDOlb2joYapzSA0",
-    authDomain: "movie-curator.firebaseapp.com",
-    databaseURL: "https://movie-curator.firebaseio.com",
-    storageBucket: "movie-curator.appspot.com",
-    messagingSenderId: "462576352543"
-  };
-  firebase.initializeApp(config);
+var config = {
+  apiKey: "AIzaSyBeR0rvkB8aPUDIOBoxxDOlb2joYapzSA0",
+  authDomain: "movie-curator.firebaseapp.com",
+  databaseURL: "https://movie-curator.firebaseio.com",
+  storageBucket: "movie-curator.appspot.com",
+  messagingSenderId: "462576352543"
+};
+firebase.initializeApp(config);
 
 ReactDOM.render(
   <Router history={hashHistory}>
