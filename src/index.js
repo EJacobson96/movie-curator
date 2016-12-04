@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 import { Router, Route, hashHistory } from 'react-router';
-import SignIn from './SignIn';
+import {SignIn} from './SignIn';
+import AdvancedSearch from './AdvancedSearch';
+
 
 import firebase from 'firebase';
 
@@ -22,11 +24,16 @@ import 'bootstrap/dist/css/bootstrap.css';
   };
   firebase.initializeApp(config);
 
+
+
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
       <Route path="login" component={SignIn} />
+      <Route path="advancedsearch" component={AdvancedSearch} />
     </Route>
   </Router>,
   document.getElementById('root')
 );
+
+
