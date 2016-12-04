@@ -15,6 +15,36 @@ var controller = {
             .then((response) => {
                 return response.json();
             }).catch((err) => console.log(err));
+    },
+
+    getMovieDetails: function (movieId) {
+        var resource = '3/movie/' + movieId + '?api_key=' + ApiKey;
+        var uri = baseApiUrl + resource;
+
+        return fetch(uri)
+            .then((response) => {
+                return response.json();
+            }).catch((err) => console.log(err));
+    },
+
+    getMovieTrailer: function(movieId) {
+        var resource = '3/movie/' + movieId + '/videos?api_key=' + ApiKey;
+        var uri = baseApiUrl + resource;
+
+        return fetch(uri)
+            .then((response) => {
+                return response.json();
+            }).catch((err) => console.log(err));
+    },
+
+    getMovieCredits: function(movieId) {
+        var resource = '3/movie/' + movieId + '/credits?api_key=' + ApiKey;
+        var uri = baseApiUrl + resource;
+
+        return fetch(uri)
+            .then((response) => {
+                return response.json();
+            }).catch((err) => console.log(err));
     }
 
 

@@ -76,7 +76,9 @@ class App extends Component {
             </div>
           </Drawer>
           <Content>
-            {this.props.children}
+            <div className="mainContent">
+              {this.props.children}
+            </div>
           </Content>
         </Layout>
         <Dialog open={this.state.openInbox}>

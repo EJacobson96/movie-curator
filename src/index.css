@@ -1,11 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
 }
 
+.mainContent {
+  width: 90%;
+  margin: auto;
+  max-width: 990px;
+  padding-bottom: 3em; 
+}
+
 dialog.mdl-dialog {
   width: 80%;
+  max-width: 850px;
 }
 
 .mdl-list__item--three-line .mdl-list__item-primary-content, .mdl-list__item--three-line .mdl-list__item-text-body, .mdl-list__item--three-line {
@@ -44,4 +56,74 @@ dialog.mdl-dialog {
 
 .mdl-badge.mdl-badge--overlap:after {
   /*top: -25px !important;*/
+}
+
+.mdl-grid {
+  padding: 0 !important;
+}
+
+.detailedCard .cardSection {
+  width: 100%;
+  height: auto;
+  margin-left: 0;
+  padding: 1em;
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.video-container iframe, .video-container object, .video-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+img.responsive-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.detailedCard h1 {
+  font-size: 1.5em;
+  font-style: italic;
+  padding-bottom: 0.3em;
+  border-bottom: 2px solid black;
+}
+
+.detailedCard h2 {
+  margin-top: 0;
+}
+
+.detailedCard h3 {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.detailedCard img {
+  width: 100%;
+}
+
+.detailedCard .contentParagraph {
+  margin-bottom: 3em;
+}
+
+.ratingBox {
+  display: inline-block;
+  background: white;
+  padding: 1em;
+  width: 100%;
+  text-align: center;
+}
+
+.mdl-list li {
+  font-size: 1em;
+  padding: 0.2em;
+  min-height: 2em !important;
 }

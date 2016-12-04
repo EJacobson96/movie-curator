@@ -6,6 +6,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import SignInForm from './SignIn';
 import SignUpForm from './SignUp';
 import WatchList from './WatchList';
+import Movies from './Movies';
 import firebase from 'firebase';
 
 import 'react-mdl/extra/material.css';
@@ -29,6 +30,7 @@ ReactDOM.render(
     <Route path="/" component={App}>
       <IndexRoute component={SignInForm} />
       <Route path="watchlist" component={WatchList} />
+      <Route path="/movie/:movieId" component={Movies} />
     </Route>
     <Route path="join" component={SignUpForm} />
     <Route path="login" component={SignInForm} />
