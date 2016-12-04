@@ -81,3 +81,17 @@ button p {
   float: left;
   margin-right: 5px;
 }
+
+#root .NowPlaying {
+  float:right;
+  margin-right: 13%;
+}
+
+#root .Watchlist {
+  float:left;
+  margin-left: 4%;
+}
+
+ul li {
+  margin: 3%;
+}

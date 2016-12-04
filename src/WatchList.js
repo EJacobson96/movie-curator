@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Controller from './DataController';
+import NowPlayingController from './NowPlayingController';
 import firebase from 'firebase';
 import { hashHistory } from 'react-router';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from 'react-mdl'
 
 class WatchList extends Component {
     componentDidMount() {
@@ -34,7 +36,25 @@ class WatchList extends Component {
                 <button className="btn btn-primary logOutDrawer" onClick={()=>this.signOut()}>Log Out</button>
                 {/*<MovieData userInput='Arrival' /> */}
                 <Movies />
+                <MovieData />
                 
+            </div>
+        )
+    }
+}
+
+
+class NowPlaying extends Component {
+    render() {
+        var nowPlaying = this.props.searchMovies.map((movie) => {
+            return <li>{movie.original_title}</li>
+        })
+        return (
+            <div className='NowPlaying'>
+                <h2>Movies In Theaters Now</h2>
+                <ul>
+                    {nowPlaying}
+                </ul>
             </div>
         )
     }
@@ -47,12 +67,23 @@ class MovieData extends Component {
         this.fetchData = this.fetchData.bind(this);
     }
 
-    fetchData(searchTerm) {
+    // fetchData(searchTerm) {
+    //     var thisComponent = this;
+    //     var movies = [];
+    //     Controller.search(searchTerm)
+    //     .then((data) => {
+    //         movies = data.results.splice(0,5);
+    //         thisComponent.setState({movieData:movies})
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
+
+    fetchData() {
         var thisComponent = this;
         var movies = [];
-        Controller.search(searchTerm)
+        NowPlayingController.search()
         .then((data) => {
-            movies = data.results.splice(0,5);
+            movies = data.results.splice(0,10);
             thisComponent.setState({movieData:movies})
         })
         .catch((err) => console.log(err));
@@ -61,7 +92,7 @@ class MovieData extends Component {
     render() {
         return (
             <div>
-                <Movies fetchData={this.fetchData(this.props.userInput)} searchMovies={this.state.movieData} />
+                <NowPlaying fetchData={this.fetchData(this.props.userInput)} searchMovies={this.state.movieData} />
             </div>
         );
     }
@@ -104,8 +135,9 @@ class Movies extends Component {
             MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
         })
         return (
-            <div> 
+            <div className="Watchlist"> 
                 {movierow}
+                
             </div>
         );
     }
@@ -114,7 +146,9 @@ class Movies extends Component {
 class MovieCard extends Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {openMessageBox: false, username:'', message:''};
+        this.handleCloseMessageBox = this.handleCloseMessageBox.bind(this);
+        this.handleOpenMessageBox = this.handleCloseMessageBox.bind(this);
     }
     saveMovie(poster, title, overview, id) {
         var idRef = firebase.database().ref('users/'+ firebase.auth().currentUser.uid + '/watchlist');
@@ -163,6 +197,27 @@ class MovieCard extends Component {
         this.setState({});        
     }
 
+    sendMessage(event) {
+        console.log(this.state.message);
+        console.log(this.state.username);
+    }
+
+    handleOpenMessageBox() {
+        this.setState({ openInbox: true, username:this.state.username, message:this.state.message});
+    }
+
+    handleCloseMessageBox() {
+        this.setState({ openInbox: false, username:this.state.username, message:this.state.message });
+    }
+
+    updateMessage(event) {
+        this.setState({ openInbox: this.state.openInbox, username:this.state.username, message: event.target.value});
+    }
+
+    updateUsername(event) {
+        this.setState({openMessageBox: false, username: event.target.value, message:this.state.message});
+    }
+
     checkId (movieId, obj) {
         if (obj == null) {
             return false;
@@ -200,8 +255,8 @@ class MovieCard extends Component {
                     <h2>{this.props.MoviteTitle}</h2>
                     <p>{this.props.MovieOverview}</p>    
                     {saved}
-                    {favorited}  
-                    <button className="btn btn-primary" onClick={()=> this.shareMovie()}><i className="material-icons">mail_outline</i></button>
+                    {favorited} 
+
                 </div>
             </div>
         );
