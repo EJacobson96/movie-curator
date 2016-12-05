@@ -107,7 +107,7 @@ class NowPlaying extends Component {
         })
         return (
             <div className='NowPlaying'>
-                <h2>Movies In Theaters Now</h2>
+                <h1>Movies In Theaters Now</h1>
                 <ul>
                     {nowPlaying}
                 </ul>

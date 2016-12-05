@@ -68,6 +68,7 @@ class App extends Component {
               />
           </Header>
           <Drawer title="The Movie Curator">
+            
             <Navigation>
               <Link to="home">Home</Link>
               <Link to="watchlist">Movie Watchlist</Link>

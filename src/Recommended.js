@@ -72,8 +72,8 @@ class DisplayRecommendedMovies extends Component {
 
             RecommendedController.search(movieId)
                 .then((data) => {
-                    var movies = data.results.slice(0, 5);
-                    var top = data.results[5];
+                    var movies = data.results.slice(0, 6);
+                    var top = data.results[6];
                     this.setState({ movieData: movies, top: top });
                 })
                 .catch((err) => console.log(err));
@@ -99,18 +99,20 @@ class DisplayRecommendedMovies extends Component {
         return (
             <div>
                 <Grid>
-                    <Cell col={8}>
+                    <Cell col={7}>
                         <h1>Top Recommended Movie</h1>
                         {topMovie}
                     </Cell>
-                    <Cell col={4}>
+                    <Cell offset={1} col={4}>
                         <MovieData />
                     </Cell>
                 </Grid>
                 <h1>Other Suggestions</h1>
-                <Grid>
-                    {movieRow}
-                </Grid>
+                <div className="recommendedMovieList">
+                    <Grid>
+                        {movieRow}
+                    </Grid>
+                </div>
             </div >
         )
     }
