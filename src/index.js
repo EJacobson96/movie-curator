@@ -7,6 +7,7 @@ import SignInForm from './SignIn';
 import SignUpForm from './SignUp';
 import Watchlist from './WatchList';
 import AdvancedSearch from './AdvancedSearch';
+import Movies from './Movies';
 import firebase from 'firebase';
 
 import 'react-mdl/extra/material.css';
@@ -16,22 +17,24 @@ import './App.css';
 
 
 // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBeR0rvkB8aPUDIOBoxxDOlb2joYapzSA0",
-    authDomain: "movie-curator.firebaseapp.com",
-    databaseURL: "https://movie-curator.firebaseio.com",
-    storageBucket: "movie-curator.appspot.com",
-    messagingSenderId: "462576352543"
-  };
-  firebase.initializeApp(config);
+var config = {
+  apiKey: "AIzaSyBeR0rvkB8aPUDIOBoxxDOlb2joYapzSA0",
+  authDomain: "movie-curator.firebaseapp.com",
+  databaseURL: "https://movie-curator.firebaseio.com",
+  storageBucket: "movie-curator.appspot.com",
+  messagingSenderId: "462576352543"
+};
+firebase.initializeApp(config);
 
 
 
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
+      <IndexRoute component={SignInForm} />
       <Route path="watchlist" component={Watchlist} />
-      <Route path="advancedsearch" component={AdvancedSearch} />
+      <Route path="advanced" component={AdvancedSearch} />
+      <Route path="/movie/:movieId" component={Movies} />
     </Route>
     <Route path="join" component={SignUpForm} />
     <Route path="login" component={SignInForm} />

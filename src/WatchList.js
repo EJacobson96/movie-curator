@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import NowPlayingController from './NowPlayingController';
 import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from 'react-mdl'
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell } from 'react-mdl'
 
 class WatchList extends Component {
     constructor(props) {
-    super(props);
-    this.state = {};
-    this.handleOpenDialog = this.handleOpenDialog.bind(this);
-    this.handleCloseDialog = this.handleCloseDialog.bind(this);
-}
+        super(props);
+        this.state = {};
+        this.handleOpenDialog = this.handleOpenDialog.bind(this);
+        this.handleCloseDialog = this.handleCloseDialog.bind(this);
+    }
 
     handleOpenDialog() {
         this.setState({
@@ -32,27 +32,25 @@ class WatchList extends Component {
         this.handleCloseDialog();
     }
 
-    updateUsername (event) {
-        this.setState({username: event.target.value})
+    updateUsername(event) {
+        this.setState({ username: event.target.value })
     }
 
     updateMessage(event) {
-        this.setState({message: event.target.value})
+        this.setState({ message: event.target.value })
     }
 
     componentDidMount() {
         /* Add a listener and callback for authentication events */
-        this.state = {};
-        this.unregister = firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                console.log('Auth state changed: logged in as', user.email);
-                this.setState({ userId: user.uid, userName: user.displayName });
+        this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) {
+                this.setState({
+                    user: firebaseUser
+                });
+            } else {
+                hashHistory.push('/login');
             }
-            else {
-                hashHistory.push('login');
-                //null out the saved state
-            }
-        })
+        });
     }
 
     componentWillUnmount() {
@@ -60,34 +58,42 @@ class WatchList extends Component {
             this.unregister(); //call that function!
         }
     }
-    signOut() {
-        firebase.auth().signOut()
-        hashHistory.push('login');
-    }
+
     render() {
+        var movies = <p>There are no movies in your watchlist.</p>;
+        if (this.state.user) {
+            movies = <Movies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
+        }
         return (
             <div>
                 <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
-                <DialogTitle>Share A Movie</DialogTitle>
-                <DialogContent>
-                    <form role="form">
-                        <textarea placeholder="Friend's Username" name="text" className="form-control" onChange={(e) => this.updateUsername(e)}></textarea>  
-                        <p id="recommendMessage">Loading message...</p>             
-                        <div className="form-group">
-                        </div>
-                    </form>
-                </DialogContent>
-                <DialogActions>
-                    <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
-                    
-                </DialogActions>
+                    <DialogTitle>Share A Movie</DialogTitle>
+                    <DialogContent>
+                        <form role="form">
+                            <textarea placeholder="Friend's Username" name="text" className="form-control" onChange={(e) => this.updateUsername(e)}></textarea>
+                            <p id="recommendMessage">You should watch <Link id="recommendLink" to=""></Link>!</p>
+                            <div className="form-group">
+                            </div>
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
+                    </DialogActions>
                 </Dialog>
-                
-                <button className="btn btn-primary logOutDrawer" onClick={() => this.signOut()}>Log Out</button>
+
                 {/*<MovieData userInput='Arrival' /> */}
-                <Movies dialogCallback={this.handleOpenDialog}/>
-                <MovieData />
-                
+                <div className="watchlist">
+                    <h1>My Watchlist</h1>
+                    <Grid>
+                        <Cell col={9}>
+                            {movies}
+                        </Cell>
+                        <Cell col={3}>
+                            <MovieData />
+                        </Cell>
+                    </Grid>
+                </div>
+
             </div>
         )
     }
@@ -162,7 +168,7 @@ class Movies extends Component {
             this.setState({ users: snapshot.val() });
         });
         /* Add a listener for changes to the movies object, and save in the state */
-        var watchlistRef = firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/watchlist');
+        var watchlistRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist');
         watchlistRef.on('value', (snapshot) => {
             var watchlistArray = []; //could also do this processing in render
             var movieObjects = snapshot.val();
@@ -176,7 +182,7 @@ class Movies extends Component {
     componentWillUnmount() {
         //unregister listeners
         firebase.database().ref('users').off();
-        firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/watchlist').off();
+        firebase.database().ref('users/' + this.props.user.uid + '/watchlist').off();
     }
 
     render() {
@@ -186,8 +192,7 @@ class Movies extends Component {
         // })
         return (
             <div className="">
-                <DisplayMovies dialogCallback={this.props.dialogCallback} movies={this.state.watchlist} />
-
+                <DisplayMovies user={this.props.user} dialogCallback={this.props.dialogCallback} movies={this.state.watchlist} />
             </div>
         );
     }
@@ -196,8 +201,7 @@ class Movies extends Component {
 class DisplayMovies extends Component {
     render() {
         var movierow = this.props.movies.map((movie) => {
-            return <MovieCard dialogCallback={this.props.dialogCallback} MoviePoster={movie.poster_path} MovieOverview={movie.overview}
-                MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
+            return <MovieCard user={this.props.user} dialogCallback={this.props.dialogCallback} MoviePoster={movie.poster_path} MovieOverview={movie.overview} MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
         })
         return (
             <div className="Watchlist">
@@ -215,12 +219,12 @@ class MovieCard extends Component {
     }
 
     saveMovie(poster, title, overview, id) {
-        var idRef = firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/watchlist');
+        var idRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist');
         idRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
             var idExists = this.checkId(id, movieObject);
             if (!idExists) {
-                var userRef = firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/watchlist/' + id);
+                var userRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist/' + id);
                 var newMovie = {
                     poster_path: poster,
                     original_title: title,
@@ -231,25 +235,25 @@ class MovieCard extends Component {
                 };
                 userRef.set(newMovie);
             } else {
-                firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/watchlist/' + id).remove();
+                firebase.database().ref('users/' + this.props.user.uid + '/watchlist/' + id).remove();
             }
         })
         this.setState({});
     }
 
     favoriteMovie(id) {
-        var idRef = firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/Favorited');
+        var idRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited');
         idRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
-            var idExists = this.checkId(id,movieObject);
+            var idExists = this.checkId(id, movieObject);
             if (!idExists) {
-                var userRef = firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/Favorited/' + id);
+                var userRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited/' + id);
                 var newMovie = {
-                    id:id
+                    id: id
                 }
                 userRef.set(newMovie);
             } else {
-                firebase.database().ref('users/' + firebase.auth().currentUser.uid + '/Favorited/' + id).remove();
+                firebase.database().ref('users/' + this.props.user.uid + '/Favorited/' + id).remove();
             }
         })
         this.setState({});
@@ -274,46 +278,59 @@ class MovieCard extends Component {
         var movieTitle = this.props.MovieTitle;
         var movieId = this.props.MovieId;
         this.props.dialogCallback();
-        document.querySelector('#recommendMessage').innerHTML = 'You should watch ' + <a href={'http://localhost:3000/?#/movie' + movieId}>{movieTitle}</a> + '!'; 
+        document.querySelector('#recommendLink').href = '#/movie/' + movieId;
+        document.querySelector('#recommendLink').textContent = movieTitle;
     }
 
     render() {
-        var favorited = null;
-        var saved = null;
-        var savedRef = firebase.database().ref('users/'+ firebase.auth().currentUser.uid + '/watchlist');
-        var favoriteRef = firebase.database().ref('users/'+ firebase.auth().currentUser.uid + '/Favorited');
+        var favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button>;
+
+        var saved = saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>;
+
+        var savedRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist');
+        var favoriteRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited');
         savedRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
-            var idExists = this.checkId(this.props.MovieId,movieObject);
+            var idExists = this.checkId(this.props.MovieId, movieObject);
             if (!idExists) {
-                saved = <button className="btn btn-primary" onClick={()=> this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview,this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>
+                saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>
             } else {
-            saved = <button className="btn btn-primary" onClick={()=> this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview,this.props.MovieId)}><p>Watchlist</p><i className="material-icons">indeterminate_check_box</i></button> 
+                saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">indeterminate_check_box</i></button>
             }
         })
         favoriteRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
-            var idExists = this.checkId(this.props.MovieId,movieObject);
+            var idExists = this.checkId(this.props.MovieId, movieObject);
             if (!idExists) {
-                favorited = <button className="btn btn-primary" onClick={()=> this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button> 
+                favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button>
             } else {
-            favorited = <button className="btn btn-primary" onClick={()=> this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite</i></button>
+                favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite</i></button>
             }
-        })          
-        
+        })
+
         return (
             <div className="movieCard">
-                <div className="imgSection"><img src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' /></div>
-                <div className="cardSection">
-                    <h2>{this.props.MovieTitle}</h2>
-                    <p>{this.props.MovieOverview}</p>
-                    {saved}
-                    {favorited} 
-                    <i onClick={ this.updateMessage} className="material-icons">mail_outline</i>
-                </div>
+                <Grid>
+                    <Cell col={4}>
+                        <div className="imgSection">
+                            <img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' />
+                        </div>
+                    </Cell>
+
+                    <Cell col={8}>
+                        <div className="cardSection">
+                            <Link to={"/movie/" + this.props.MovieId}><h2>{this.props.MovieTitle}</h2></Link>
+                            <p>{this.props.MovieOverview}</p>
+                            {saved}
+                            {favorited}
+                            <i onClick={this.updateMessage} className="material-icons">mail_outline</i>
+                        </div>
+                    </Cell>
+                </Grid>
             </div>
         );
     }
 }
 
+export { DisplayMovies };
 export default WatchList;
