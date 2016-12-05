@@ -118,7 +118,7 @@ signUpCallBack(email, password, handle, avatar) {
     var handleErrors = this.validate(this.state.handle, {required:true, minLength:3});
     
     //button validation
-    var signUpEnabled = (emailErrors.isValid && passwordErrors.isValid && handleErrors.isValid && (this.state.password === this.state.confirmPassword));
+    var signUpEnabled = (emailErrors.isValid && passwordErrors.isValid && handleErrors.isValid && confirmpasswordErrors.isValid &&(this.state.password === this.state.confirmPassword));
 
     return (
       <div className="styleForm">

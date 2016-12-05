@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Controller from './DataController';
 import NowPlayingController from './NowPlayingController';
 import firebase from 'firebase';
 import { hashHistory } from 'react-router';
@@ -23,6 +22,22 @@ class WatchList extends Component {
         this.setState({
             openDialog: false
         });
+    }
+
+    updateParent(movieId, title) {
+        console.log(movieId);
+        console.log(title);
+        console.log(this.state.username);
+        console.log(this.state.message);
+        this.handleCloseDialog();
+    }
+
+    updateUsername (event) {
+        this.setState({username: event.target.value})
+    }
+
+    updateMessage(event) {
+        this.setState({message: event.target.value})
     }
 
     componentDidMount() {
@@ -52,21 +67,27 @@ class WatchList extends Component {
     render() {
         return (
             <div>
-                <Button colored onClick={this.handleOpenDialog} raised ripple>Show Dialog</Button>
-                <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
-                <DialogTitle>Allow data collection?</DialogTitle>
+                {/*<Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
+                <DialogTitle>Share A Movie</DialogTitle>
                 <DialogContent>
-                    <p>Allowing us to collect data will let us get you the information you want faster.</p>
+                    <form role="form">
+                        <textarea placeholder="Friend's Username" name="text" className="form-control" onChange={(e) => this.updateUsername(e)}></textarea>  
+                        <p id="recommendMessage">Loading message...</p>             
+                        <div className="form-group">
+                        </div>
+                    </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button type='button'>Agree</Button>
-                    <Button type='button' onClick={this.handleCloseDialog}>Disagree</Button>
+                    <Button type='button' onClick={this.handleCloseDialog()}>Close</Button>
+                    
                 </DialogActions>
                 </Dialog>
+                */}
                 <button className="btn btn-primary logOutDrawer" onClick={() => this.signOut()}>Log Out</button>
                 {/*<MovieData userInput='Arrival' /> */}
-                <Movies updateParent={this.updateParent} dialogCallback={this.handleOpenDialog} />
+                <Movies />
                 <MovieData />
+                
             </div>
         )
     }
@@ -121,7 +142,7 @@ class MovieData extends Component {
     render() {
         return (
             <div>
-                <NowPlaying fetchData={this.fetchData(this.props.userInput)} searchMovies={this.state.movieData} />
+                <NowPlaying fetchData={this.fetchData()} searchMovies={this.state.movieData} />
             </div>
         );
     }
@@ -160,7 +181,7 @@ class Movies extends Component {
 
     render() {
         var movierow = this.state.watchlist.map((movie) => {
-            return <MovieCard dialogCallback={this.props.dialogCallback} MoviePoster={movie.poster_path} MovieOverview={movie.overview}
+            return <MovieCard  MoviePoster={movie.poster_path} MovieOverview={movie.overview}
                 MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
         })
         return (
@@ -232,6 +253,11 @@ class MovieCard extends Component {
         return false;
     }
 
+    updateMessage() {
+        this.props.dialogCallback();
+        document.querySelector('#recommendMessage').innerHTML = 'You should watch ' + <Link to={"movie/" + this.props.MovieId}> + this.props.MovieTitle + </Link> + '!'; 
+    }
+
     render() {
         var favorited = null;
         var saved = null;
@@ -260,11 +286,11 @@ class MovieCard extends Component {
             <div className="movieCard">
                 <div className="imgSection"><img src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' /></div>
                 <div className="cardSection">
-                    <h2>{this.props.MoviteTitle}</h2>
+                    <h2>{this.props.MovieTitle}</h2>
                     <p>{this.props.MovieOverview}</p>
                     {saved}
                     {favorited} 
-            <button className="btn btn-primary" onClick={() => { this.props.dialogCallback(); this.props.updateParent();}}><i className="material-icons">mail_outline</i></button>
+
                 </div>
             </div>
         );
