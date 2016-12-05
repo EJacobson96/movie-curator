@@ -154,8 +154,7 @@ class SearchForm extends React.Component {
         console.log("year to search: ", yearSearch);
         this.setState({year: yearSearch});
     }
-
-
+    
     handleChangeGenre(event) {
     var newGenre = event.target.value;
     console.log("genre to search:", newGenre);
