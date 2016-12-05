@@ -55,8 +55,6 @@ class App extends Component {
 
 
   render() {
-
-    console.log('user on app', this.state.userId);
     return (
       <div>
         <Layout fixedHeader fixedDrawer>
@@ -71,16 +69,19 @@ class App extends Component {
           </Header>
           <Drawer title="The Movie Curator">
             <Navigation>
-              <Link href="">Home</Link>
+              <Link to="home">Home</Link>
               <Link to="watchlist">Movie Watchlist</Link>
               <Link to="advanced">Search For Movies</Link>
             </Navigation>
-            <div className="bottomNav">
+            <div id="badgeContainer">
               <Badge id="inboxBadge" text="..." overlap>
                 <Link onClick={() => { this.handleOpenInbox() } }>
                   <i className="fa fa-inbox" aria-hidden="true"></i>
                 </Link>
               </Badge>
+            </div>
+            <div className="bottomNav">
+
               <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>
             </div>
           </Drawer>

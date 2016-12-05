@@ -35,13 +35,13 @@ dialog.mdl-dialog {
 
 .bottomNav {
   position: absolute;
-  bottom: 0px;
+  bottom: 3em;
   text-align: center;
   width: 100%;
 }
 
 #inboxBadge {
-  float: left;
+  /*float: left;*/
   margin: 1em;
 }
 
@@ -60,6 +60,11 @@ dialog.mdl-dialog {
 
 .mdl-grid {
   padding: 0 !important;
+}
+
+.container {
+  margin: auto;
+  width: 90%;
 }
 
 .detailedCard .cardSection {
@@ -99,6 +104,19 @@ img.responsive-img {
 .watchlist .cardSection {
   height: 100%;
   padding: 2em;
+}
+
+.Watchlist .cardSection {
+  height: 100%;
+  padding: 2em;
+}
+
+.Watchlist {
+  margin-left: 0 !important;
+}
+
+#badgeContainer {
+  text-align: center;
 }
 
 .watchlist .cardSection h2 {

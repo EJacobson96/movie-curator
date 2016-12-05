@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import MovieController from './MovieController';
 import { DisplayMovies } from './WatchList';
 import { PleaseWork, MovieCard } from './WatchList';
+import { Grid, Cell } from 'react-mdl';
 //import md5 from 'js-md5';
 
 const genresObj = {
@@ -41,6 +42,25 @@ class AdvancedSearch extends React.Component {
     this.fetchData = this.fetchData.bind(this);
   }
 
+  componentDidMount() {
+    /* Add a listener and callback for authentication events */
+    this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser) {
+        this.setState({
+          user: firebaseUser
+        });
+      } else {
+        hashHistory.push('/login');
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.unregister) { //if have a function to unregister with
+      this.unregister(); //call that function!
+    }
+  }
+
   //helper method
   fetchData(title, year, genre) {
     var thisComponent = this;
@@ -65,6 +85,10 @@ class AdvancedSearch extends React.Component {
   }
 
   render() {
+    var displayMovies = [];
+    if (this.state.user) {
+      displayMovies = <DisplayMovies movies={this.state.movies} user={this.state.user} />;
+    }
     return (
       <div className="container">
         <header>
@@ -73,7 +97,11 @@ class AdvancedSearch extends React.Component {
         <main>
           <SearchForm totalResults={this.state.totalResults} searchCallback={this.fetchData} />
           {/*<MovieTable movies={this.state.movies} />*/}
-          <DisplayMovies movies={this.state.movies} />
+          <Grid>
+            <Cell col={10}>
+              {displayMovies}
+            </Cell>
+          </Grid>
         </main>
       </div>
     );
@@ -137,7 +165,8 @@ class SearchForm extends React.Component {
 
   }
 
-  handleClick() {
+  handleClick(event) {
+    event.preventDefault();
     console.log("You clicked search!");
     console.log('the state title is: ' + this.state.title);
 
@@ -204,7 +233,7 @@ class SearchForm extends React.Component {
           </FormControl>
         </FormGroup>
         {' '}
-        <Button type="submit" onClick={this.handleClick}>
+        <Button type="submit" onClick={(e) => this.handleClick(e)}>
           Search
         </Button>
       </Form>
