@@ -43,6 +43,8 @@ class MessageList extends React.Component {
             messages = this.props.messages.map((message) => {
                 return <Message userId={this.props.userId} message={message} />
             });
+        } else {
+            messages = <p>No new messages here.</p>;
         }
 
         return (

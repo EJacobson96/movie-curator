@@ -148,6 +148,20 @@ header.mdl-layout__header {
   color: black !important;
 }
 
+.actions {
+  cursor: pointer;
+}
+
+.mdl-textfield, #message_input {
+  width: 100% !important;
+}
+
+#formGrid .mdl-cell {
+  text-align: center !important;
+}
+
+
+
 @media screen and (min-width: 1024px) {
   .hideOnLarge {
     display: none !important;

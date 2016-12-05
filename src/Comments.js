@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import moment from 'moment';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemAction, Icon, ListItemContent } from 'react-mdl';
+import _ from 'lodash';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemAction, Icon, ListItemContent, Textfield, Cell, FABButton, Grid } from 'react-mdl';
 
 import Controller from './DataController';
 
@@ -37,7 +38,70 @@ class Comments extends React.Component {
     render() {
         console.log('rendering with state:', this.state);
         return (
-            <CommentList currentUser={this.props.user} messages={this.state.messages} />
+            <div>
+                <PostComment currentUser={this.props.user} movieId={this.props.movieId} />
+                <CommentList currentUser={this.props.user} messages={this.state.messages} movieId={this.props.movieId} />
+            </div>
+        );
+    }
+}
+
+class PostComment extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            message: ''
+        };
+    }
+
+    // Update the component with the user's message
+    // pre: must have an event from a textfield 
+    updateMessage(event) {
+        this.setState({ message: event.target.value });
+    }
+
+    // Post the new message to the channel/database
+    postMessage(event) {
+        event.preventDefault();
+        var commentRef = firebase.database().ref('comments/' + this.props.movieId);
+        var newMessage = {
+            fromUserID: this.props.currentUser.uid,
+            fromUserName: this.props.currentUser.displayName,
+            fromUserAvatar: this.props.currentUser.photoURL,
+            content: this.state.message,
+            date: firebase.database.ServerValue.TIMESTAMP
+        }
+
+        commentRef.push(newMessage);
+
+        // Reset component's message after update
+        this.setState({ message: '' });
+        document.querySelector('#message_input').value = '';
+    }
+
+    // render our form
+    render() {
+        return (
+            <Grid>
+                <Cell col={12} className="message_entry">
+                    <Grid id="formGrid">
+                        <Cell col={10}>
+                            <Textfield
+                                onChange={(e) => { this.updateMessage(e) } }
+                                label="New Comment..."
+                                aria-label="new comment text"
+                                id="message_input"
+                                />
+                        </Cell>
+                        <Cell col={2}>
+                            <FABButton className="FABCell" ripple onClick={(e) => this.postMessage(e)}>
+                                <Icon name="add" />
+                            </FABButton>
+                        </Cell>
+                    </Grid>
+                </Cell>
+            </Grid>
         );
     }
 }
@@ -46,9 +110,9 @@ class CommentList extends React.Component {
     render() {
         var messages = <p>Loading comments...</p>;
         if (this.props.messages && this.props.currentUser) {
-            console.log('making comments');
-            messages = this.props.messages.map((message) => {
-                return <Comment currentUser={this.props.currentUser} message={message} />
+            var messagesArray = _.reverse(Object.keys(this.props.messages));
+            messages = messagesArray.map((message) => {
+                return <Comment currentUser={this.props.currentUser} message={this.props.messages[message]} messageId={message} movieId={this.props.movieId} />
             });
         } else {
             messages = <p>No comments. Be the first to share your thoughts!</p>
@@ -70,7 +134,9 @@ class Comment extends React.Component {
     }
 
     deleteMessage() {
-        firebase.database().ref('users/' + this.props.currentUser.id + '/inbox/' + this.props.message.id).remove();
+        console.log('movie id', this.props.movieId);
+        console.log('message id', this.props.messageId);
+        firebase.database().ref('comments/' + this.props.movieId + '/' + this.props.messageId).remove();
     }
 
     render() {
@@ -81,8 +147,7 @@ class Comment extends React.Component {
 
         var actions = [];
         if (this.props.currentUser.uid == this.props.message.fromUserID) {
-            console.log('setting actions');
-            actions = <a aria-label="delete" onClick={this.deleteMessage}><Icon name="delete" /></a>;
+            actions = <a className="actions" caria-label="delete" onClick={this.deleteMessage}><Icon name="delete" /></a>;
         }
 
         return (
