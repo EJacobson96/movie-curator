@@ -284,7 +284,7 @@ class MovieCard extends Component {
     render() {
         var favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button>;
 
-        var saved = saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>;
+        var saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>;
 
         var savedRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist');
         var favoriteRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited');
@@ -312,7 +312,7 @@ class MovieCard extends Component {
                 <Grid>
                     <Cell col={4}>
                         <div className="imgSection">
-                            <img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' />
+                            <Link to={'movie/' + this.props.MovieId}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' /></Link>
                         </div>
                     </Cell>
 

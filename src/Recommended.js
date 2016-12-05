@@ -4,6 +4,7 @@ import { Link, hashHistory } from 'react-router';
 import { Grid, Cell } from 'react-mdl';
 import RecommendedController from './RecommendedController';
 import { MovieData, MovieCard } from './WatchList'
+import _ from 'lodash';
 
 class RecommendedMovie extends Component {
     constructor(props) {
@@ -79,13 +80,21 @@ class DisplayRecommendedMovies extends Component {
             console.log('recommended snapshot', snapshot.val());
             var movieObject = snapshot.val();
             var movieIdArray = Object.keys(movieObject);
-            var randNum = Math.random(0, movieIdArray.length - 1);
-            var movieId = movieIdArray[0];
+            var randNum = 0;
+            var movieId = 0;
+            if (movieIdArray.length > 0) {
+                randNum = _.random(0, movieIdArray.length - 1)
+                movieId = movieIdArray[randNum];
+                console.log(randNum);
+            } else {
+
+            }
 
             RecommendedController.search(movieId)
                 .then((data) => {
+                    console.log(data);
+                    var top = data.results.slice(0,1);
                     var movies = data.results.slice(0, 5);
-                    var top = data.results[5];
                     console.log('top first', this.state.top);
                     this.setState({ movieData: movies, top: top })
                 })
@@ -102,7 +111,7 @@ class DisplayRecommendedMovies extends Component {
             // topMovie = <MovieCard MoviePoster={this.state.top.poster_path} MovieOverview={this.state.top.overview} MovieTitle={this.state.top.original_title} MovieId={this.state.top.id} />;
         }
         var movieRow = <p>Please add some movies to your favorites first!</p>;
-        if (this.state.movieData) {
+        if (this.state.movieData && this.state.user) {
             movieRow = this.state.movieData.map((movie) => {
                 return (
                     <Cell col={2}>
