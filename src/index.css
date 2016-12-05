@@ -94,6 +94,18 @@ img.responsive-img {
   height: auto;
 }
 
+h1 {
+  font-size: 1.5em !important;
+  font-style: italic;
+  padding-bottom: 0.3em;
+  border-bottom: 2px solid black;
+}
+
+.recommendedMovieList .mdl-cell{
+  margin: 0 !important;
+  width: calc(16.6666666667%);
+}
+
 .watchlist h1, .moviePage h1 {
   font-size: 1.5em;
   font-style: italic;
