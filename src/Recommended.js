@@ -67,16 +67,20 @@ class DisplayRecommendedMovies extends Component {
             if (movieIdArray.length > 0) {
                 randNum = _.random(0, movieIdArray.length - 1);
                 movieId = movieIdArray[randNum];
-                console.log(randNum);
+                RecommendedController.search(movieId)
+                    .then((data) => {
+                        var movies = data.results.slice(0, 6);
+                        var top = data.results[6];
+                        this.setState({ movieData: movies, top: top });
+                    })
+                    .catch((err) => console.log(err));
+            } else {
+                NowPlayingController.search()
+                    .then((data) => {
+                        var movie = data.results.slice(0,1);
+                        this.setState({ movieData: movie});
+                    })
             }
-
-            RecommendedController.search(movieId)
-                .then((data) => {
-                    var movies = data.results.slice(0, 6);
-                    var top = data.results[6];
-                    this.setState({ movieData: movies, top: top });
-                })
-                .catch((err) => console.log(err));
         });
     }
 
