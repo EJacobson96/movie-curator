@@ -1,0 +1,2 @@
+class RecommendedMovies extends Component {
+}

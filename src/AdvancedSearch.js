@@ -3,6 +3,7 @@ import { Link, hashHistory } from 'react-router';
 import {Form, FormControl, InputGroup, Button, Glyphicon,FormGroup, ControlLabel} from 'react-bootstrap';
 import firebase from 'firebase';
 import MovieController from './MovieController';
+import { PleaseWork, MovieCard } from './WatchList';
 //import md5 from 'js-md5';
 
     const genresObj = {
@@ -46,6 +47,7 @@ class AdvancedSearch extends React.Component {
     var thisComponent = this; 
     MovieController.search(title, year, genre)
       .then(function(data) { 
+        console.log(data);
         thisComponent.setState({
           movies:data.results, 
           totalResults:data.total_results
@@ -81,7 +83,6 @@ class AdvancedSearch extends React.Component {
 //table of movie data
 class MovieTable extends React.Component {
   render() {
-
     var rows = this.props.movies.map(function(movieObj){
       return <MovieRow movie={movieObj} />;
     });

@@ -31,7 +31,6 @@ ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
       <Route path="watchlist" component={Watchlist} />
-      <Route path="login" component={SignInForm} />
       <Route path="advancedsearch" component={AdvancedSearch} />
     </Route>
     <Route path="join" component={SignUpForm} />

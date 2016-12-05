@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import NowPlayingController from './NowPlayingController';
 import firebase from 'firebase';
-import { hashHistory } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from 'react-mdl'
 
 class WatchList extends Component {
@@ -67,7 +67,7 @@ class WatchList extends Component {
     render() {
         return (
             <div>
-                {/*<Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
+                <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
                 <DialogTitle>Share A Movie</DialogTitle>
                 <DialogContent>
                     <form role="form">
@@ -78,14 +78,14 @@ class WatchList extends Component {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button type='button' onClick={this.handleCloseDialog()}>Close</Button>
+                    <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
                     
                 </DialogActions>
                 </Dialog>
-                */}
+                
                 <button className="btn btn-primary logOutDrawer" onClick={() => this.signOut()}>Log Out</button>
                 {/*<MovieData userInput='Arrival' /> */}
-                <Movies />
+                <Movies dialogCallback={this.handleOpenDialog}/>
                 <MovieData />
                 
             </div>
@@ -180,16 +180,30 @@ class Movies extends Component {
     }
 
     render() {
-        var movierow = this.state.watchlist.map((movie) => {
-            return <MovieCard  MoviePoster={movie.poster_path} MovieOverview={movie.overview}
+        // var movierow = this.state.watchlist.map((movie) => {
+        //     return <MovieCard  MoviePoster={movie.poster_path} MovieOverview={movie.overview}
+        //         MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
+        // })
+        return (
+            <div className="">
+                <DisplayMovies dialogCallback={this.props.dialogCallback} movies={this.state.watchlist} />
+
+            </div>
+        );
+    }
+}
+
+class DisplayMovies extends Component {
+    render() {
+        var movierow = this.props.movies.map((movie) => {
+            return <MovieCard dialogCallback={this.props.dialogCallback} MoviePoster={movie.poster_path} MovieOverview={movie.overview}
                 MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
         })
         return (
             <div className="Watchlist">
                 {movierow}
-
             </div>
-        );
+        )
     }
 }
 
@@ -197,6 +211,7 @@ class MovieCard extends Component {
     constructor(props) {
         super(props);
         this.state = { username: '', message: '' };
+        this.updateMessage = this.updateMessage.bind(this);
     }
 
     saveMovie(poster, title, overview, id) {
@@ -254,8 +269,12 @@ class MovieCard extends Component {
     }
 
     updateMessage() {
+        console.log(this.props);
+        console.log(this.props.MovieTitle);
+        var movieTitle = this.props.MovieTitle;
+        var movieId = this.props.MovieId;
         this.props.dialogCallback();
-        document.querySelector('#recommendMessage').innerHTML = 'You should watch ' + <Link to={"movie/" + this.props.MovieId}> + this.props.MovieTitle + </Link> + '!'; 
+        document.querySelector('#recommendMessage').innerHTML = 'You should watch ' + <a href={'http://localhost:3000/?#/movie' + movieId}>{movieTitle}</a> + '!'; 
     }
 
     render() {
@@ -290,7 +309,7 @@ class MovieCard extends Component {
                     <p>{this.props.MovieOverview}</p>
                     {saved}
                     {favorited} 
-
+                    <i onClick={ this.updateMessage} className="material-icons">mail_outline</i>
                 </div>
             </div>
         );
