@@ -3,7 +3,7 @@ import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
 import { Grid, Cell } from 'react-mdl';
 import RecommendedController from './RecommendedController';
-import { MovieData, MovieCard } from './WatchList'
+import { MovieData, MovieCard } from './WatchList';
 import _ from 'lodash';
 
 class RecommendedMovie extends Component {
@@ -23,26 +23,8 @@ class RecommendedMovie extends Component {
                 hashHistory.push('/login');
             }
         });
-
-        // var favoritesRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited');
-        // favoritesRef.on('value', (snapshot) => {
-        //     console.log('recommended snapshot', snapshot.val());
-        //     var movieObject = snapshot.val();
-        //     var movieIdArray = Object.keys(movieObject);
-        //     var randNum = Math.random(0, movieIdArray.length - 1);
-        //     var movieId = movieIdArray[0];
-        //     this.fetchData(movieId);
-        // });
     }
 
-    // fetchData(id) {
-    //     RecommendedController.search(id)
-    //         .then((data) => {
-    //             var movies = data.results.slice(0, 5);
-    //             this.setState({ movieData: movies })
-    //         })
-    //         .catch((err) => console.log(err));
-    // }
 
     signOut() {
         firebase.auth().signOut()
@@ -60,7 +42,6 @@ class RecommendedMovie extends Component {
         return (
             <div>
                 {content}
-                <MovieData />
             </div>
         )
     }
@@ -80,23 +61,20 @@ class DisplayRecommendedMovies extends Component {
             console.log('recommended snapshot', snapshot.val());
             var movieObject = snapshot.val();
             var movieIdArray = Object.keys(movieObject);
+            console.log(movieIdArray);
             var randNum = 0;
             var movieId = 0;
             if (movieIdArray.length > 0) {
-                randNum = _.random(0, movieIdArray.length - 1)
+                randNum = _.random(0, movieIdArray.length - 1);
                 movieId = movieIdArray[randNum];
                 console.log(randNum);
-            } else {
-
             }
 
             RecommendedController.search(movieId)
                 .then((data) => {
-                    console.log(data);
-                    var top = data.results.slice(0,1);
                     var movies = data.results.slice(0, 5);
-                    console.log('top first', this.state.top);
-                    this.setState({ movieData: movies, top: top })
+                    var top = data.results[5];
+                    this.setState({ movieData: movies, top: top });
                 })
                 .catch((err) => console.log(err));
         });
@@ -104,14 +82,11 @@ class DisplayRecommendedMovies extends Component {
 
     render() {
         var topMovie = [];
-        console.log('top 2', this.state.top);
-        if (this.state.top) {
-            // console.log('setting top');
-            // console.log('top again', this.state.top);
-            // topMovie = <MovieCard MoviePoster={this.state.top.poster_path} MovieOverview={this.state.top.overview} MovieTitle={this.state.top.original_title} MovieId={this.state.top.id} />;
+        if (this.state.top && this.props.user) {
+            topMovie = <MovieCard user={this.props.user} MoviePoster={this.state.top.poster_path} MovieOverview={this.state.top.overview} MovieTitle={this.state.top.original_title} MovieId={this.state.top.id} />;
         }
         var movieRow = <p>Please add some movies to your favorites first!</p>;
-        if (this.state.movieData && this.state.user) {
+        if (this.state.movieData) {
             movieRow = this.state.movieData.map((movie) => {
                 return (
                     <Cell col={2}>
@@ -123,13 +98,20 @@ class DisplayRecommendedMovies extends Component {
         }
         return (
             <div>
-                {topMovie}
-                <div className="imgSection">
-                    <Grid>
-                        {movieRow}
-                    </Grid>
-                </div>
-            </div>
+                <Grid>
+                    <Cell col={8}>
+                        <h1>Top Recommended Movie</h1>
+                        {topMovie}
+                    </Cell>
+                    <Cell col={4}>
+                        <MovieData />
+                    </Cell>
+                </Grid>
+                <h1>Other Suggestions</h1>
+                <Grid>
+                    {movieRow}
+                </Grid>
+            </div >
         )
     }
 }

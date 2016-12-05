@@ -83,9 +83,9 @@ class WatchList extends Component {
 
                 {/*<MovieData userInput='Arrival' /> */}
                 <div className="watchlist">
-                    <h1>My Watchlist</h1>
                     <Grid>
                         <Cell col={9}>
+                            <h1>My Watchlist</h1>
                             {movies}
                         </Cell>
                         <Cell col={3}>
@@ -171,7 +171,7 @@ class Movies extends Component {
         watchlistRef.on('value', (snapshot) => {
             var watchlistArray = []; //could also do this processing in render
             var movieObjects = snapshot.val();
-            Object.keys(movieObjects).forEach(function (child) {
+            Object.keys(movieObjects).forEach(function(child) {
                 watchlistArray.push(movieObjects[child]); //make into an array
             });
             this.setState({ watchlist: watchlistArray });
