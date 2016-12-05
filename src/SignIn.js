@@ -127,8 +127,6 @@ class SignInForm extends React.Component {
     );
   }
 }
-
-
 //A component that displays an input form with validation styling
 //props are: field, type, label, changeCallback, errors
 class ValidatedInput extends React.Component {
@@ -142,7 +140,6 @@ class ValidatedInput extends React.Component {
     );
   }  
 }
-
 //a component to represent and display validation errors
 class ValidationErrors extends React.Component {
   render() {
@@ -161,5 +158,4 @@ class ValidationErrors extends React.Component {
     );
   }
 }
-
 export default SignInForm;
