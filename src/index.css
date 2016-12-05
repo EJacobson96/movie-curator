@@ -89,11 +89,15 @@ img.responsive-img {
   height: auto;
 }
 
-.detailedCard h1 {
+.moviePage h1 {
   font-size: 1.5em;
   font-style: italic;
   padding-bottom: 0.3em;
   border-bottom: 2px solid black;
+}
+
+.detailedCard {
+  margin-bottom: 5em;
 }
 
 .detailedCard h2 {
@@ -122,8 +126,30 @@ img.responsive-img {
   text-align: center;
 }
 
+.castBox {
+  background: white;
+  padding: 1em 1em 1em 2em;
+  width: 100%;  
+}
+
 .mdl-list li {
   font-size: 1em;
   padding: 0.2em;
   min-height: 2em !important;
+}
+
+header.mdl-layout__header {
+  background-color: white;
+  color: black;
+  box-shadow: none;
+}
+
+.mdl-layout__drawer-button {
+  color: black !important;
+}
+
+@media screen and (min-width: 1024px) {
+  .hideOnLarge {
+    display: none !important;
+  }
 }

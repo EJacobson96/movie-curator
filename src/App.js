@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Button, Badge } from 'react-mdl';
+import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Button, Badge, Textfield } from 'react-mdl';
 import { Link, hashHistory } from 'react-router';
 import SignIn from './SignIn';
 import Inbox from './Inbox';
@@ -58,7 +58,16 @@ class App extends Component {
     console.log('user on app', this.state.userId);
     return (
       <div>
-        <Layout fixedDrawer>
+        <Layout fixedHeader fixedDrawer>
+          <Header title="The Movie Curator" className="hideOnLarge">
+            <Textfield
+              value=""
+              onChange={() => { } }
+              label="Search"
+              expandable
+              expandableIcon="search"
+              />
+          </Header>
           <Drawer title="The Movie Curator">
             <Navigation>
               <Link href="">Home</Link>
@@ -81,6 +90,9 @@ class App extends Component {
             </div>
           </Content>
         </Layout>
+
+
+
         <Dialog open={this.state.openInbox}>
           <DialogTitle>Inbox</DialogTitle>
           <DialogContent>

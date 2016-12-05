@@ -5,44 +5,53 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListIt
 
 import Controller from './DataController';
 
-class Inbox extends React.Component {
+class Comments extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = { loading: true };
+        this.updateState = this.updateState.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateState(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-        var inboxRef = firebase.database().ref('users/' + nextProps.userId + '/inbox');
+        if (nextProps.movieId !== this.props.movieId) {
+            this.updateState(nextProps);
+        }
+    }
+
+    updateState(props) {
+        var inboxRef = firebase.database().ref('comments/' + props.movieId);
         inboxRef.on('value', (snapshot) => {
-            console.log('my messages', snapshot.val());
             this.setState({
                 messages: snapshot.val(),
-                loading: false
+                loading: false,
+                user: props.user
             });
-            if(snapshot.val()) {
-                document.querySelector('#inboxBadge').setAttribute('data-badge', snapshot.val().length - 1);
-            } else {
-                document.querySelector('#inboxBadge').setAttribute('data-badge', '0');
-            }
         });
     }
 
     render() {
+        console.log('rendering with state:', this.state);
         return (
-            <MessageList userId={this.props.userId} messages={this.state.messages} />
+            <CommentList currentUser={this.props.user} messages={this.state.messages} />
         );
     }
 }
 
-class MessageList extends React.Component {
+class CommentList extends React.Component {
     render() {
-        console.log(this.props.messages);
-        var messages = <p>Loading messages...</p>;
-        if (this.props.messages) {
+        var messages = <p>Loading comments...</p>;
+        if (this.props.messages && this.props.currentUser) {
+            console.log('making comments');
             messages = this.props.messages.map((message) => {
-                return <Message userId={this.props.userId} message={message} />
+                return <Comment currentUser={this.props.currentUser} message={message} />
             });
+        } else {
+            messages = <p>No comments. Be the first to share your thoughts!</p>
         }
 
         return (
@@ -53,7 +62,7 @@ class MessageList extends React.Component {
     }
 }
 
-class Message extends React.Component {
+class Comment extends React.Component {
     constructor(props) {
         super(props);
 
@@ -61,8 +70,7 @@ class Message extends React.Component {
     }
 
     deleteMessage() {
-        console.log(this.props.message);
-        firebase.database().ref('users/' + this.props.userId + '/inbox/' + this.props.message.id).remove();
+        firebase.database().ref('users/' + this.props.currentUser.id + '/inbox/' + this.props.message.id).remove();
     }
 
     render() {
@@ -71,9 +79,11 @@ class Message extends React.Component {
         var avatar = <img src={this.props.message.fromUserAvatar} alt={author} />;
         var date = this.props.message.date;
 
-        var actions = [
-            <a aria-label="delete" onClick={this.deleteMessage}><Icon name="delete" /></a>,
-        ];
+        var actions = [];
+        if (this.props.currentUser.uid == this.props.message.fromUserID) {
+            console.log('setting actions');
+            actions = <a aria-label="delete" onClick={this.deleteMessage}><Icon name="delete" /></a>;
+        }
 
         return (
             <ListItem threeLine>
@@ -86,4 +96,4 @@ class Message extends React.Component {
     }
 }
 
-export default Inbox;
+export default Comments;
