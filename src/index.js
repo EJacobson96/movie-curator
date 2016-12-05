@@ -6,6 +6,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import SignInForm from './SignIn';
 import SignUpForm from './SignUp';
 import Watchlist from './WatchList';
+import RecommendedMovie from'./Recommended';
 import AdvancedSearch from './AdvancedSearch';
 import firebase from 'firebase';
 
@@ -30,6 +31,7 @@ import './App.css';
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
+      <Route path="home" component={RecommendedMovie} />
       <Route path="watchlist" component={Watchlist} />
       <Route path="advancedsearch" component={AdvancedSearch} />
     </Route>

@@ -97,7 +97,7 @@ class WatchList extends Component {
 class NowPlaying extends Component {
     render() {
         var nowPlaying = this.props.searchMovies.map((movie) => {
-            return <li>{movie.original_title}</li>
+            return <Link to={'movie/' + movie.id}><li>{movie.original_title}</li></Link>
         })
         return (
             <div className='NowPlaying'>
@@ -138,7 +138,6 @@ class MovieData extends Component {
             })
             .catch((err) => console.log(err));
     }
-
     render() {
         return (
             <div>
@@ -316,4 +315,5 @@ class MovieCard extends Component {
     }
 }
 
+export { MovieData };
 export default WatchList;

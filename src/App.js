@@ -10,10 +10,10 @@ import 'whatwg-fetch';
 
 class App extends Component {
   render() {
-    Controller.search('Arrival')
-    .then((data) => {
-      console.log(data);
-    })
+    // Controller.search('Arrival')
+    // .then((data) => {
+    //   console.log(data);
+    // })
     return (
       <div>
         <Layout fixedDrawer>
