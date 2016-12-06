@@ -71,6 +71,7 @@ class App extends Component {
             
             <Navigation>
               <Link to="home">Home</Link>
+              <Link to="recommended">Recommended Movies</Link>
               <Link to="watchlist">Movie Watchlist</Link>
               <Link to="advanced">Search For Movies</Link>
             </Navigation>
@@ -95,7 +96,7 @@ class App extends Component {
 
 
 
-        <Dialog open={this.state.openInbox}>
+        {/*<Dialog open={this.state.openInbox}>
           <DialogTitle>Inbox</DialogTitle>
           <DialogContent>
             <Inbox updateParent={this.updateState} userId={this.state.userId} />
@@ -103,7 +104,7 @@ class App extends Component {
           <DialogActions>
             <Button type='button' onClick={this.handleCloseInbox}>Close</Button>
           </DialogActions>
-        </Dialog>
+        </Dialog>*/}
       </div>
     );
   }

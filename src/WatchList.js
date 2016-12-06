@@ -100,7 +100,7 @@ class WatchList extends Component {
                     </DialogContent>
                     <DialogActions>
                         <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
-                        <Button type='button' onClick={(e) => this.submitMessage(e)}>Send</Button>
+                        <Button type='button' onClick={(e) => this.submitMessage(e)}>Send</Button>f
                     </DialogActions>
                 </Dialog>
 
@@ -151,7 +151,7 @@ class MovieData extends Component {
         var movies = [];
         NowPlayingController.search()
             .then((data) => {
-                movies = data.results.splice(0, 10);
+                movies = data.results.slice(7,17);
                 thisComponent.setState({ movieData: movies })
             })
             .catch((err) => console.log(err));
@@ -323,11 +323,8 @@ class DisplayButtons extends Component {
         return false;
     }
     render() {
-        // var favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button>;
-
-        // var saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>;
         var favorited = null;
-        var saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>
+        var saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>;
         var savedRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist');
         //console.log(savedRef);
         savedRef.once('value', (snapshot) => {
@@ -364,5 +361,5 @@ class DisplayButtons extends Component {
     }
 }
 
-export { DisplayMovies, MovieData, MovieCard };
+export { DisplayMovies, MovieData, MovieCard, DisplayButtons };
 export default WatchList;
