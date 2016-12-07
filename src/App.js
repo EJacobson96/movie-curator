@@ -71,10 +71,10 @@ class App extends Component {
     }
 
     render() {
-        var logout = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>
+        var logout = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>;
         if (this.state.userId) {
             var name = firebase.auth().currentUser.displayName;
-            logout = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out, {name.split(' ')[0]}</Link>
+            logout = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out, {name.split(' ')[0]}</Link>;
         }
         return (
             <div>
@@ -85,10 +85,6 @@ class App extends Component {
 
 
                         <Form>
-                            {/*<FormGroup>
-                                <i class="fa fa-search"></i>
-                                <FormControl className="quickSearch" aria-label="quick search" type="text" placeholder="Search" onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
-                            </FormGroup>*/}
 
                             <FormGroup>
                                 <InputGroup className="searchForm">
@@ -97,11 +93,7 @@ class App extends Component {
                                 </InputGroup>
                             </FormGroup>
 
-                            {/*<FormGroup>
-                                <InputGroup>
-                                    <FormControl aria-label="quick search" type="text" onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
-                                </InputGroup>
-                            </FormGroup>*/}
+
                         </Form>
 
 
@@ -112,14 +104,20 @@ class App extends Component {
                             <Link to="watchlist" activeClassName="activeLink">Movie Watchlist</Link>
                             <Link to="search" activeClassName="activeLink">Advanced Search</Link>
                         </Navigation>
-                        <div id="badgeContainer">
+                        {/*<div id="badgeContainer">
                             <Badge id="inboxBadge" text="..." overlap>
                                 <Link onClick={() => { this.handleOpenInbox() } }>
                                     <i className="fa fa-inbox" aria-hidden="true"></i>
                                 </Link>
                             </Badge>
-                        </div>
+                        </div>*/}
                         <div className="bottomNav">
+                            <div id="badgeContainer">
+                                <Badge id="inboxBadge" text="..." overlap>
+                                    <Link onClick={() => { this.handleOpenInbox() } } className="inboxButton">Inbox</Link>
+                                </Badge>
+                            </div>
+
                             {logout}
                         </div>
                     </Drawer>
