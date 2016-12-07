@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import moment from 'moment';
+import { Link } from 'react-router';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemAction, Icon, ListItemContent } from 'react-mdl';
 
 import Controller from './DataController';
@@ -21,7 +22,7 @@ class Inbox extends React.Component {
                 loading: false
             });
             if(snapshot.val()) {
-                document.querySelector('#inboxBadge').setAttribute('data-badge', snapshot.val().length - 1);
+                document.querySelector('#inboxBadge').setAttribute('data-badge', Object.keys(snapshot.val()).length);
             } else {
                 document.querySelector('#inboxBadge').setAttribute('data-badge', '0');
             }
@@ -40,8 +41,10 @@ class MessageList extends React.Component {
         console.log(this.props.messages);
         var messages = <p>Loading messages...</p>;
         if (this.props.messages) {
-            messages = this.props.messages.map((message) => {
-                return <Message userId={this.props.userId} message={message} />
+            var messageArray = Object.keys(this.props.messages);
+            messages = messageArray.map((message) => {
+                console.log(message);
+                return <Message userId={this.props.userId} messageId={message} message={this.props.messages[message]} />
             });
         } else {
             messages = <p>No new messages here.</p>;
@@ -64,11 +67,12 @@ class Message extends React.Component {
 
     deleteMessage() {
         console.log(this.props.message);
-        firebase.database().ref('users/' + this.props.userId + '/inbox/' + this.props.message.id).remove();
+        firebase.database().ref('users/' + this.props.userId + '/inbox/' + this.props.messageId).remove();
     }
 
     render() {
-        var content = this.props.message.content;
+        var sentence = "Check out the movie";
+        var content = <Link to={'movie/' + this.props.message.id}>{"Check out the movie " + this.props.message.content + "!"}</Link>;
         var author = this.props.message.fromUserName;
         var avatar = <img src={this.props.message.fromUserAvatar} alt={author} />;
         var date = this.props.message.date;

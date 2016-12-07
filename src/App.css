@@ -99,22 +99,40 @@
    margin-bottom: 20px;
 }
 
+.cardSection button p {
+   display: inline;
+   vertical-align: super;
+   padding-right: 0.5em;
+}
+
 #root button {
    border: none;
    height: 40px;
 }
 
-#root .adder {
+#root .adder, .btn-primary {
    background-color: #f2f2f2;
    color: #000;
    margin-right: 5px;
-   transition: .3s all ease-in-out;
-   -webkit-transition: .3s all ease-in-out;
+   transition: .1s all ease-in-out;
+   -webkit-transition: .1s all ease-in-out;
+}
+
+.buttons button {
+  border: none;
+  color: black;
+  background: #f2f2f2;
+}
+
+.buttons button:hover, .buttons button:focus {
+  background: #d9d9d9;
+  color: white;
 }
 
 #root .adder p {
-   float: left;
-   margin-right: 5px;
+   /*float: left;*/
+   /*margin-right: 5px;*/
+   display: inline;
 }
 
 #root .adder:hover {
@@ -131,8 +149,8 @@
    background-color: #AEB6BF;
    color: #fff;
    margin-bottom: 10px;
-   transition: .3s all ease-in-out;
-   -webkit-transition: .3s all ease-in-out;
+   transition: .1s all ease-in-out;
+   -webkit-transition: .1s all ease-in-out;
 }
 
 #root .trailer:hover {
@@ -151,3 +169,4 @@
 #root .NowPlaying ul a:hover {
    text-decoration: underline;
 }
+
