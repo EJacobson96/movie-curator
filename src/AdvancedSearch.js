@@ -8,6 +8,9 @@ import { PleaseWork, MovieCard } from './WatchList';
 import { Grid, Cell } from 'react-mdl';
 //import md5 from 'js-md5';
 
+// import './App.css';
+// import './index.css';
+
 const genresObj = {
   28: 'Action',
   12: 'Adventure',
@@ -34,13 +37,8 @@ class AdvancedSearch extends React.Component {
   constructor(props) {
     super(props);
 
-    var theMovieTitle = '';
-    if(this.props.location.query.q){
-      theMovieTitle = this.props.location.query.q;
-    }
-
     this.state = {
-      title: theMovieTitle,
+      totalResults: 0
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -65,17 +63,6 @@ class AdvancedSearch extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-
-    var theMovieTitle = '';
-    if(nextProps.location.query.q){
-      theMovieTitle = nextProps.location.query.q;
-    }
-
-    console.log("new location", nextProps.location);
-    this.setState({title: theMovieTitle});
-  }
-
   //helper method
   fetchData(title, year, genre) {
     var thisComponent = this;
@@ -83,7 +70,8 @@ class AdvancedSearch extends React.Component {
       .then(function (data) {
         console.log(data);
         thisComponent.setState({
-          movies: data.results
+          movies: data.results,
+          totalResults: data.total_results
         })
 
         if (genre && title) {    // if searching by genre and title
@@ -103,14 +91,13 @@ class AdvancedSearch extends React.Component {
     if (this.state.user && this.state.movies) {
       displayMovies = <DisplayMovies movies={this.state.movies} user={this.state.user} />;
     }
-
     return (
       <div className="container">
         <header>
           <h1>Advanced Search</h1>
         </header>
         <main>
-          <SearchForm searchCallback={this.fetchData} movieTitle={this.state.title} />
+          <SearchForm totalResults={this.state.totalResults} searchCallback={this.fetchData} />
           {/*<MovieTable movies={this.state.movies} />*/}
           <Grid>
             <Cell col={10}>
@@ -169,7 +156,7 @@ class SearchForm extends React.Component {
     super(props);
 
     this.state = { //track values for each search
-      title: props.movieTitle,
+      title: '',
       year: '',
       genre: '',
       movies: [],
@@ -179,22 +166,6 @@ class SearchForm extends React.Component {
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
 
   }
-
-  // componentWillReceiveProps(nextProps){
-  //  //   look like the above thing a bit
-  //   var theMovieTitle = '';
-  //   if(nextProps){
-  //     theMovieTitle = nextProps;
-  //     console.log("new movie", nextProps);
-  //    //set the state to be new
-  //   this.setState({title: theMovieTitle.movieTitle});
-  //   }
-
-  //   console.log("yo");
-  //    //call your search function
-  //  // this.props.searchCallback(this.state.title);
-    
-  // }
 
   handleClick(event) {
     event.preventDefault();
@@ -210,29 +181,26 @@ class SearchForm extends React.Component {
     this.setState({ title: titleSearch });
   }
 
+  handleChangeYear(event) {
+    var yearSearch = event.target.value;
+    console.log("year to search: ", yearSearch);
+    this.setState({ year: yearSearch });
+  }
 
-    handleChangeYear(event) {
-        var yearSearch = event.target.value;
-        console.log("year to search: ", yearSearch);
-        this.setState({year: yearSearch});
-    }
-    
 
   handleChangeGenre(event) {
-
     var newGenre = event.target.value;
     console.log("genre to search:", newGenre);
     this.setState({ genre: newGenre });
   }
 
   render() {
-
     return (
       <Form inline>
         <FormGroup controlId="formInlineTitle">
           <ControlLabel>Title</ControlLabel>
           {' '}
-          <FormControl type="text" placeholder="i.e. Titanic" value={this.state.title} onChange={this.handleChangeTitle} />
+          <FormControl type="text" placeholder="i.e. Titanic" onChange={this.handleChangeTitle} />
         </FormGroup>
         {' '}
         <FormGroup controlId="formInlineYear">

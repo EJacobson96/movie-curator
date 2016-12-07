@@ -94,11 +94,22 @@ img.responsive-img {
   height: auto;
 }
 
+h1 {
+  font-size: 1.5em !important;
+  font-style: italic;
+  padding-bottom: 0.3em;
+  border-bottom: 2px solid black;
+}
+
 .watchlist h1, .moviePage h1 {
   font-size: 1.5em;
   font-style: italic;
   padding-bottom: 0.3em;
   border-bottom: 2px solid black;
+}
+
+.cardSection {
+  padding: 2em;
 }
 
 .watchlist .cardSection {
@@ -194,4 +205,9 @@ header.mdl-layout__header {
   .hideOnLarge {
     display: none !important;
   }
+
+  .NowPlaying li {
+    font-size: 1em;
+  }
+
 }
