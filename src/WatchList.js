@@ -202,6 +202,11 @@ class DisplayMovies extends Component {
         var movierow = this.props.movies.map((movie) => {
             return <MovieCard user={this.props.user} dialogCallback={this.props.dialogCallback} MoviePoster={movie.poster_path} MovieOverview={movie.overview} MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
         })
+
+        if (this.props.movies.length == 0){
+            movierow = "No Movies Found";
+        }
+
         return (
             <div className="Watchlist">
                 {movierow}

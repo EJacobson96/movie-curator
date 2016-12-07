@@ -41,7 +41,6 @@ class AdvancedSearch extends React.Component {
 
     this.state = {
       title: theMovieTitle,
-      movies: []
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -101,7 +100,7 @@ class AdvancedSearch extends React.Component {
 
   render() {
     var displayMovies = [];
-    if (this.state.user) {
+    if (this.state.user && this.state.movies) {
       displayMovies = <DisplayMovies movies={this.state.movies} user={this.state.user} />;
     }
 
@@ -181,21 +180,21 @@ class SearchForm extends React.Component {
 
   }
 
-  componentWillReceiveProps(nextProps){
-   //   look like the above thing a bit
-    var theMovieTitle = '';
-    if(nextProps && (nextProps !== this.props)){
-      theMovieTitle = nextProps;
-      console.log("new movie", nextProps);
-     //set the state to be new
-    this.setState({title: theMovieTitle.movieTitle});
-    }
+  // componentWillReceiveProps(nextProps){
+  //  //   look like the above thing a bit
+  //   var theMovieTitle = '';
+  //   if(nextProps){
+  //     theMovieTitle = nextProps;
+  //     console.log("new movie", nextProps);
+  //    //set the state to be new
+  //   this.setState({title: theMovieTitle.movieTitle});
+  //   }
 
-    console.log("yo");
-     //call your search function
-    this.props.searchCallback(this.state.title);
+  //   console.log("yo");
+  //    //call your search function
+  //  // this.props.searchCallback(this.state.title);
     
-  }
+  // }
 
   handleClick(event) {
     event.preventDefault();
