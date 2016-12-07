@@ -45,32 +45,25 @@ class RecommendedMovies extends Component {
     componentDidMount() {
         var favoritesRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited');
         favoritesRef.on('value', (snapshot) => {
-            console.log('recommended snapshot', snapshot.val());
             var movieObject = snapshot.val();
-            var randNum = 0;
-            var movieId = 0;
-            var recommended = 0;
-            if (movieObject != null) {
+            var movieId;
+            var recommended;
+            if (movieObject != null && Object.keys(movieObject).length > 0) {
                 var movieIdArray = Object.keys(movieObject);
-                randNum = _.random(0, movieIdArray.length - 1);
+                var randNum = _.random(movieIdArray.length - 1);
                 movieId = movieIdArray[randNum];
                 RecommendedController.search(movieId)
                     .then((data) => {
-                        console.log(data);
                         var movies = data.results.slice(1,7);
                         recommended = data.results[0];
- 
                         this.setState({ movieData: movies, recommended:recommended.id });
-                        console.log(this.state.recommended);
                         Controller.getMovieDetails(this.state.recommended)
                             .then((data) => {
-                                console.log('im going in 1 ');
                                 this.setState({ movie: data });
                             });
 
                         Controller.getMovieTrailer(this.state.recommended)
                             .then((data) => {
-                                console.log('im going in 2');
                                 var trailer = data.results.filter((trailer) => {
                                     return trailer.type == 'Trailer';
                                 });
@@ -79,7 +72,6 @@ class RecommendedMovies extends Component {
 
                         Controller.getMovieCredits(this.state.recommended)
                             .then((data) => {
-                                console.log('im going in 3');
                                 this.setState({ cast: data.cast });
                             });
                     })
@@ -91,10 +83,8 @@ class RecommendedMovies extends Component {
     render() {
         var topMovie = <p>Please add some movies to your favorites first!</p>;
         if (this.state.movie && this.state.cast && this.props.user && this.state.trailer) {
-            console.log(true);
         }
         if (this.state.movie && this.state.cast && this.props.user && this.state.trailer) {
-            console.log('im going in 4');
             topMovie = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} user={this.props.user} trailer={this.state.trailer} />;
         }
         var movieRow = null;

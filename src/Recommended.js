@@ -92,16 +92,16 @@ class DisplayRecommendedMovies extends Component {
             topMovie = <MovieCard user={this.props.user} MoviePoster={this.state.top.poster_path} MovieOverview={this.state.top.overview} MovieTitle={this.state.top.original_title} MovieId={this.state.top.id} />;
         }
         var movieRow = <p>Please add some movies to your favorites first!</p>;
-        // if (this.state.movieData) {
-        //     movieRow = this.state.movieData.map((movie) => {
-        //         return (
-        //             <Cell col={2}>
-        //                 <Link to={'movie/' + movie.id}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + movie.poster_path} role='presentation' />
-        //                 </Link>
-        //             </Cell>
-        //         );
-        //     });
-        // }
+        if (this.state.movieData) {
+            movieRow = this.state.movieData.map((movie) => {
+                return (
+                    <Cell col={2}>
+                        <Link to={'movie/' + movie.id}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + movie.poster_path} role='presentation' />
+                        </Link>
+                    </Cell>
+                );
+            });
+        }
         return (
             <div>
                 <Grid>

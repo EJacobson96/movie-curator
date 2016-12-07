@@ -14,12 +14,11 @@ class WatchList extends Component {
 
     handleOpenDialog() {
         this.setState({
-            openDialog: true
+            openDialog: true,
         });
     }
 
     handleCloseDialog() {
-        console.log('close');
         this.setState({
             openDialog: false
         });
@@ -27,8 +26,8 @@ class WatchList extends Component {
 
     sendMessage(event) {
         var movieId = document.querySelector('#recommendLink').href;
+        movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
         var movieTitle = document.querySelector('#recommendLink').textContent;
-        console.log(this.state.username);
         var userId;
         var avatar;
         var userRef = firebase.database().ref('users/');
@@ -43,7 +42,8 @@ class WatchList extends Component {
             }
             var inboxRef = firebase.database().ref('users/' + userId + '/inbox');
             var newMessage = {
-                content: "You should watch " + movieTitle,
+                content: movieTitle,
+                id: movieId,
                 date: firebase.database.ServerValue.TIMESTAMP,
                 fromUserAvatar: avatar,
                 fromUserID: userId,
@@ -83,8 +83,12 @@ class WatchList extends Component {
 
     render() {
         var movies = <p>There are no movies in your watchlist.</p>;
+        var id = null;
         if (this.state.user) {
             movies = <Movies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
+        }
+        if (this.state.id) {
+            id = this.state.id;
         }
         return (
             <div>
@@ -100,7 +104,7 @@ class WatchList extends Component {
                     </DialogContent>
                     <DialogActions>
                         <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
-                        <Button type='button' onClick={(e) => this.submitMessage(e)}>Send</Button>f
+                        <Button type='button' onClick={(e) => this.submitMessage(e)}>Send</Button>
                     </DialogActions>
                 </Dialog>
 
@@ -230,8 +234,6 @@ class MovieCard extends Component {
     }
 
     updateMessage() {
-        console.log(this.props);
-        console.log(this.props.MovieTitle);
         var movieTitle = this.props.MovieTitle;
         var movieId = this.props.MovieId;
         this.props.dialogCallback();
