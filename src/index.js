@@ -30,7 +30,8 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
+//localhost/search/titanic
+//localhost/search?q=titanic
 
 ReactDOM.render(
   <Router history={hashHistory}>

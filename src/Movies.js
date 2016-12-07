@@ -5,7 +5,7 @@ import moment from 'moment';
 import { hashHistory, Link } from 'react-router';
 import Controller from './DataController';
 import Comments from './Comments';
-import { DisplayButtons }  from './WatchList';
+import { DisplayButtons } from './WatchList';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, List, ListItem } from 'react-mdl';
 
 
@@ -27,6 +27,9 @@ class Movies extends React.Component {
         this.setState({
             openDialog: false
         });
+        // Workaround for React-MDL Dialog bug
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = 'auto';
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
     sendMessage(event) {
@@ -50,19 +53,19 @@ class Movies extends React.Component {
                 content: movieTitle,
                 id: movieId,
                 date: firebase.database.ServerValue.TIMESTAMP,
-                fromUserAvatar: avatar,
-                fromUserID: userId,
-                fromUserName: this.state.username
+                fromUserAvatar: this.state.user.photoURL,
+                fromUserID: this.state.user.uid,
+                fromUserName: this.state.user.displayName
             };
             inboxRef.push(newMessage);
         })
     }
 
     updateUsername(event) {
-        this.setState({username:event.target.value })
+        this.setState({ username: event.target.value })
     }
 
-    submitMessage (e) {
+    submitMessage(e) {
         this.sendMessage(e);
         this.handleCloseDialog();
     }
@@ -141,7 +144,7 @@ class Movies extends React.Component {
     render() {
         var card = [];
         if (this.state.movie && this.state.cast && this.state.user) {
-            card = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} user={this.state.user} trailer={this.state.trailer} dialogCallback={this.handleOpenDialog}/>;
+            card = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} user={this.state.user} trailer={this.state.trailer} dialogCallback={this.handleOpenDialog} />;
         }
 
         var comments = [];
@@ -229,7 +232,7 @@ class DetailedMovieCard extends React.Component {
                                             <p className="contentParagraph">{this.props.movie.overview}</p>
                                             <div className="buttons">
                                                 <DisplayButtons dialogCallback={this.props.dialogCallback} MoviePoster={this.props.movie.poster_path} MovieTitle={this.props.movie.original_title}
-                                                MovieOverview={this.props.movie.overview} MovieId={this.props.movie.id} user={this.props.user} />
+                                                    MovieOverview={this.props.movie.overview} MovieId={this.props.movie.id} user={this.props.user} />
                                             </div>
                                         </Cell>
                                     </Cell>

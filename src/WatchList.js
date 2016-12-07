@@ -41,16 +41,18 @@ class WatchList extends Component {
                     avatar = object[keys[i]].avatar;
                 }
             }
+
             var inboxRef = firebase.database().ref('users/' + userId + '/inbox');
+            console.log('this.state.user', this.state.user);
             var newMessage = {
                 content: movieTitle,
                 id: movieId,
                 date: firebase.database.ServerValue.TIMESTAMP,
-                fromUserAvatar: avatar,
-                fromUserID: userId,
-                fromUserName: this.state.username
+                fromUserAvatar: this.state.user.photoURL,
+                fromUserID: this.state.user.uid,
+                fromUserName: this.state.user.displayName
             };
-            inboxRef.push(newMessage);
+            var status = inboxRef.push(newMessage);
         })
     }
 
@@ -217,6 +219,11 @@ class DisplayMovies extends Component {
         var movierow = this.props.movies.map((movie) => {
             return <MovieCard user={this.props.user} dialogCallback={this.props.dialogCallback} MoviePoster={movie.poster_path} MovieOverview={movie.overview} MovieTitle={movie.original_title} MovieId={movie.id} />;
         })
+
+        if (this.props.movies.length == 0){
+            movierow = "No Movies Found"
+        }
+
         return (
             <div className="Watchlist">
                 {movierow}

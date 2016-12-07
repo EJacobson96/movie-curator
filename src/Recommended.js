@@ -15,6 +15,8 @@ class RecommendedMovie extends Component {
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
 
     }
+
+
     handleOpenDialog() {
         this.setState({
             openDialog: true,
@@ -25,6 +27,9 @@ class RecommendedMovie extends Component {
         this.setState({
             openDialog: false
         });
+        // Workaround for React-MDL Dialog bug
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = 'auto';
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
     sendMessage(event) {
@@ -44,23 +49,24 @@ class RecommendedMovie extends Component {
                 }
             }
             var inboxRef = firebase.database().ref('users/' + userId + '/inbox');
+            console.log('the current user', this.state.user);
             var newMessage = {
                 content: movieTitle,
                 id: movieId,
                 date: firebase.database.ServerValue.TIMESTAMP,
-                fromUserAvatar: avatar,
-                fromUserID: userId,
-                fromUserName: this.state.username
+                fromUserAvatar: this.state.user.photoURL,
+                fromUserID: this.state.user.uid,
+                fromUserName: this.state.user.displayName
             };
             inboxRef.push(newMessage);
         })
     }
 
     updateUsername(event) {
-        this.setState({username:event.target.value })
+        this.setState({ username: event.target.value })
     }
-    
-    submitMessage (e) {
+
+    submitMessage(e) {
         this.sendMessage(e);
         this.handleCloseDialog();
     }
@@ -120,7 +126,7 @@ class DisplayRecommendedMovies extends Component {
         this.state = {};
     }
 
-    componentDidMount() {     
+    componentDidMount() {
         NowPlayingController.search()
             .then((data) => {
                 var movies = data.results.slice(1, 7);

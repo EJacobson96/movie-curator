@@ -5,13 +5,66 @@ import RecommendedController from './RecommendedController';
 import Controller from './DataController';
 import { DetailedMovieCard }  from './Movies';
 import _ from 'lodash';
-import { Grid, Cell, List, ListItem } from 'react-mdl';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, List, ListItem } from 'react-mdl';
 
 class RecommendedMoviePage extends Component {
     constructor(props) {
         super(props);
         this.state= {};
+        this.handleOpenDialog = this.handleOpenDialog.bind(this);
+        this.handleCloseDialog = this.handleCloseDialog.bind(this);
     }
+
+    handleOpenDialog() {
+        this.setState({
+            openDialog: true,
+        });
+    }
+
+    handleCloseDialog() {
+        this.setState({
+            openDialog: false
+        });
+    }
+
+    sendMessage(event) {
+        var movieId = document.querySelector('#recommendLink').href;
+        movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
+        var movieTitle = document.querySelector('#recommendLink').textContent;
+        var userId;
+        var avatar;
+        var userRef = firebase.database().ref('users/');
+        userRef.once('value', (snapshot) => {
+            var object = snapshot.val();
+            var keys = Object.keys(object);
+            for (var i = 0; i < keys.length; i++) {
+                if (object[keys[i]].watchlist && object[keys[i]].handle == this.state.username) {
+                    userId = keys[i];
+                    avatar = object[keys[i]].avatar;
+                }
+            }
+            var inboxRef = firebase.database().ref('users/' + userId + '/inbox');
+            var newMessage = {
+                content: movieTitle,
+                id: movieId,
+                date: firebase.database.ServerValue.TIMESTAMP,
+                fromUserAvatar: this.state.user.photoURL,
+                fromUserID: this.state.user.uid,
+                fromUserName: this.state.user.displayName
+            };
+            inboxRef.push(newMessage);
+        })
+    }
+
+    updateUsername(event) {
+        this.setState({username:event.target.value })
+    }
+    
+    submitMessage (e) {
+        this.sendMessage(e);
+        this.handleCloseDialog();
+    }
+
     componentDidMount() {
         this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
@@ -23,7 +76,7 @@ class RecommendedMoviePage extends Component {
             }
         });
     }
-
+    
     componentWillUnmount() {
         if (this.unregister) {
             this.unregister();
@@ -33,10 +86,25 @@ class RecommendedMoviePage extends Component {
     render () {
         var content = <p>Please add some movies to your favorites first!</p>;
         if (this.state.user) {
-            content = <RecommendedMovies user={this.state.user} />
+            content = <RecommendedMovies dialogCallback={this.handleOpenDialog} user={this.state.user} />
         }
         return (
             <div>
+                <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
+                    <DialogTitle>Share A Movie</DialogTitle>
+                    <DialogContent>
+                        <form role="form">
+                            <textarea placeholder="Friend's Username" name="text" className="form-control" onChange={(e) => this.updateUsername(e)}></textarea>
+                            <p id="recommendMessage">You should watch <Link id="recommendLink" to=""></Link>!</p>
+                            <div className="form-group">
+                            </div>
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
+                        <Button type='button' onClick={(e) => this.submitMessage(e)}>Send</Button>
+                    </DialogActions>
+                </Dialog>
                 {content}
             </div>
         )
@@ -91,7 +159,7 @@ class RecommendedMovies extends Component {
         if (this.state.movie && this.state.cast && this.props.user && this.state.trailer) {
         }
         if (this.state.movie && this.state.cast && this.props.user && this.state.trailer) {
-            topMovie = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} user={this.props.user} trailer={this.state.trailer} />;
+            topMovie = <DetailedMovieCard dialogCallback={this.props.dialogCallback} cast={this.state.cast} movie={this.state.movie} user={this.props.user} trailer={this.state.trailer} />;
         }
         var movieRow = null;
         if (this.state.movieData) {
