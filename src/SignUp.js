@@ -45,7 +45,7 @@ class SignUpForm extends React.Component {
     /* Create a new user and save their information */
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function (firebaseUser) {
-        hashHistory.push('watchlist');
+        hashHistory.push('/');
         //include information (for app-level content)
         var profilePromise = firebaseUser.updateProfile({
           displayName: handle,
