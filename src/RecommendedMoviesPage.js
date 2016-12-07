@@ -24,6 +24,12 @@ class RecommendedMoviePage extends Component {
         });
     }
 
+    componentWillUnmount() {
+        if (this.unregister) {
+            this.unregister();
+        }
+    }
+
     render () {
         var content = <p>Please add some movies to your favorites first!</p>;
         if (this.state.user) {

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import NowPlayingController from './NowPlayingController';
 import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell } from 'react-mdl'
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell } from 'react-mdl';
+import DialogBox from './DialogBox';
 
 class WatchList extends Component {
     constructor(props) {
@@ -57,6 +58,11 @@ class WatchList extends Component {
         this.setState({username:event.target.value })
     }
 
+    submitMessage (e) {
+        this.sendMessage(e);
+        this.handleCloseDialog();
+    }
+
     componentDidMount() {
         /* Add a listener and callback for authentication events */
         this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
@@ -76,20 +82,12 @@ class WatchList extends Component {
         }
     }
 
-    submitMessage (e) {
-        this.sendMessage(e);
-        this.handleCloseDialog();
-    }
-
     render() {
         var movies = <p>There are no movies in your watchlist.</p>;
-        var id = null;
         if (this.state.user) {
             movies = <Movies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
         }
-        if (this.state.id) {
-            id = this.state.id;
-        }
+
         return (
             <div>
                 <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
@@ -108,7 +106,6 @@ class WatchList extends Component {
                     </DialogActions>
                 </Dialog>
 
-                {/*<MovieData userInput='Arrival' /> */}
                 <div className="watchlist">
                     <Grid>
                         <Cell col={9} phone={12} tablet={12}>
@@ -229,6 +226,46 @@ class DisplayMovies extends Component {
 }
 
 class MovieCard extends Component {
+    // updateMessage() {
+    //     var movieTitle = this.props.MovieTitle;
+    //     var movieId = this.props.MovieId;
+    //     this.props.dialogCallback();
+    //     document.querySelector('#recommendLink').href = '#/movie/' + movieId;
+    //     document.querySelector('#recommendLink').textContent = movieTitle;
+    // }
+
+    render() {
+        return (
+            <div className="movieCard">
+                <Grid>
+                    <Cell col={4}>
+                        <div className="imgSection">
+                            <Link to={'movie/' + this.props.MovieId}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' /></Link>
+                        </div>
+                    </Cell>
+
+                    <Cell col={8}>
+                        <div className="cardSection">
+                            <Link to={"/movie/" + this.props.MovieId}><h2>{this.props.MovieTitle}</h2></Link>
+                            <p>{this.props.MovieOverview}</p>
+
+                            {/*{saved}
+                            {favorited}
+                            <i onClick={this.updateMessage} className="material-icons">mail_outline</i>*/}
+
+                            <div className="buttons">
+                                <DisplayButtons user={this.props.user} dialogCallback={this.props.dialogCallback} MoviePoster={this.props.MoviePoster} MovieOverview={this.props.MovieOverview} MovieTitle={this.props.MovieTitle} MovieId={this.props.MovieId} />
+                            </div>
+
+                        </div>
+                    </Cell>
+                </Grid>
+            </div>
+        );
+    }
+}
+
+class DisplayButtons extends Component {
     constructor(props) {
         super(props);
         this.state = { username: '', message: '' };
@@ -243,51 +280,10 @@ class MovieCard extends Component {
         document.querySelector('#recommendLink').textContent = movieTitle;
     }
 
-    render() {
-        return (
-            <div className="movieCard">
-                <Grid>
-                    <Cell col={4}>
-                        <div className="imgSection">
-                            <img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' />
-                        </div>
-                    </Cell>
-
-                    <Cell col={8}>
-                        <div className="cardSection">
-                            <Link to={"/movie/" + this.props.MovieId}><h2>{this.props.MovieTitle}</h2></Link>
-                            <p>{this.props.MovieOverview}</p>
-
-                            {/*{saved}
-                            {favorited}
-                            <i onClick={this.updateMessage} className="material-icons">mail_outline</i>*/}
-
-                            <div className="buttons">
-                                <button className="btn btn-primary trailer" onClick={() => this.saveMovie(this.props.MoviePoster)}>
-                                    <p>Watch Trailer</p>
-                                </button>
-                                <DisplayButtons user={this.props.user} MoviePoster={this.props.MoviePoster} MovieOverview={this.props.MovieOverview} MovieTitle={this.props.MovieTitle} MovieId={this.props.MovieId} />
-                                <button className="btn btn-primary adder send" onClick={() => { this.props.dialogCallback(); this.props.updateParent(); } }>
-                                    <i className="material-icons">mail_outline</i>
-                                </button>
-                            </div>
-
-                        </div>
-                    </Cell>
-                </Grid>
-            </div>
-        );
-    }
-}
-
-class DisplayButtons extends Component {
-
     saveMovie(poster, title, overview, id) {
-        console.log(id);
         var idRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist');
         idRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
-            console.log('method called');
             var idExists = this.checkId(id, movieObject);
             if (!idExists) {
                 var userRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist/' + id);
@@ -369,6 +365,9 @@ class DisplayButtons extends Component {
             <div>
                 {saved}
                 {favorited}
+                <button className="btn btn-primary adder send" onClick={this.updateMessage}>
+                    <i className="material-icons">mail_outline</i>
+                </button>
             </div>
         )
     }

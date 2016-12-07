@@ -1,17 +1,68 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
-import { Grid, Cell } from 'react-mdl';
 import RecommendedController from './RecommendedController';
 import NowPlayingController from './NowPlayingController';
 import { MovieData, MovieCard } from './WatchList';
 import _ from 'lodash';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell } from 'react-mdl';
 
 class RecommendedMovie extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.handleOpenDialog = this.handleOpenDialog.bind(this);
+        this.handleCloseDialog = this.handleCloseDialog.bind(this);
 
+    }
+    handleOpenDialog() {
+        this.setState({
+            openDialog: true,
+        });
+    }
+
+    handleCloseDialog() {
+        this.setState({
+            openDialog: false
+        });
+    }
+
+    sendMessage(event) {
+        var movieId = document.querySelector('#recommendLink').href;
+        movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
+        var movieTitle = document.querySelector('#recommendLink').textContent;
+        var userId;
+        var avatar;
+        var userRef = firebase.database().ref('users/');
+        userRef.once('value', (snapshot) => {
+            var object = snapshot.val();
+            var keys = Object.keys(object);
+            for (var i = 0; i < keys.length; i++) {
+                if (object[keys[i]].watchlist && object[keys[i]].handle == this.state.username) {
+                    userId = keys[i];
+                    avatar = object[keys[i]].avatar;
+                }
+            }
+            var inboxRef = firebase.database().ref('users/' + userId + '/inbox');
+            var newMessage = {
+                content: movieTitle,
+                id: movieId,
+                date: firebase.database.ServerValue.TIMESTAMP,
+                fromUserAvatar: avatar,
+                fromUserID: userId,
+                fromUserName: this.state.username
+            };
+            inboxRef.push(newMessage);
+        })
+    }
+
+    updateUsername(event) {
+        this.setState({username:event.target.value })
+    }
+    
+    submitMessage (e) {
+        this.sendMessage(e);
+        this.handleCloseDialog();
     }
 
     componentDidMount() {
@@ -34,14 +85,27 @@ class RecommendedMovie extends Component {
 
 
     render() {
-        console.log('hello');
-
         var content = null;
         if (this.state.user) {
-            content = <DisplayRecommendedMovies user={this.state.user} />;
+            content = <DisplayRecommendedMovies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
         }
         return (
             <div>
+                <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
+                    <DialogTitle>Share A Movie</DialogTitle>
+                    <DialogContent>
+                        <form role="form">
+                            <textarea placeholder="Friend's Username" name="text" className="form-control" onChange={(e) => this.updateUsername(e)}></textarea>
+                            <p id="recommendMessage">You should watch <Link id="recommendLink" to=""></Link>!</p>
+                            <div className="form-group">
+                            </div>
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
+                        <Button type='button' onClick={(e) => this.submitMessage(e)}>Send</Button>
+                    </DialogActions>
+                </Dialog>
                 {content}
             </div>
         )
@@ -68,7 +132,7 @@ class DisplayRecommendedMovies extends Component {
     render() {
         var topMovie = [];
         if (this.state.top && this.props.user) {
-            topMovie = <MovieCard user={this.props.user} MoviePoster={this.state.top.poster_path} MovieOverview={this.state.top.overview} MovieTitle={this.state.top.original_title} MovieId={this.state.top.id} />;
+            topMovie = <MovieCard user={this.props.user} MoviePoster={this.state.top.poster_path} MovieOverview={this.state.top.overview} MovieTitle={this.state.top.original_title} MovieId={this.state.top.id} dialogCallback={this.props.dialogCallback} />;
         }
         var movieRow = <p>Please add some movies to your favorites first!</p>;
         if (this.state.movieData) {

@@ -40,7 +40,7 @@ ReactDOM.render(
       <Route path="home" component={RecommendedMovie} />
       <Route path="recommended" component={RecommendedMoviePage} />
       <Route path="watchlist" component={Watchlist} />
-      <Route path="advanced" component={AdvancedSearch} />
+      <Route path="search" component={AdvancedSearch} />
       <Route path="/movie/:movieId" component={Movies} />
     </Route>
     <Route path="join" component={SignUpForm} />

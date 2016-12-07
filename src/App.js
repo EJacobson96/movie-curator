@@ -27,7 +27,7 @@ class App extends Component {
     this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
         this.setState({
-          userId: firebaseUser.uid
+          userId: firebaseUser.uid,
         });
       } else {
         hashHistory.push('/login');
@@ -52,6 +52,11 @@ class App extends Component {
 
 
   render() {
+    var logOut = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>
+    if (this.state.userId) {
+      var name = firebase.auth().currentUser.displayName;
+      logOut = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out, {name}</Link>
+    }
     return (
       <div>
         <Layout fixedHeader fixedDrawer>
@@ -70,7 +75,7 @@ class App extends Component {
               <Link to="home">Home</Link>
               <Link to="recommended">Recommended Movies</Link>
               <Link to="watchlist">Movie Watchlist</Link>
-              <Link to="advanced">Search For Movies</Link>
+              <Link to="search">Advanced Search</Link>
             </Navigation>
             <div id="badgeContainer">
               <Badge id="inboxBadge" text="..." overlap>
@@ -81,7 +86,7 @@ class App extends Component {
             </div>
             <div className="bottomNav">
 
-              <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>
+              {logOut}
             </div>
           </Drawer>
           <Content>
@@ -91,7 +96,7 @@ class App extends Component {
           </Content>
         </Layout>
 
-        {/*<Dialog open={this.state.openInbox}>
+        <Dialog open={this.state.openInbox}>
           <DialogTitle>Inbox</DialogTitle>
           <DialogContent>
             <Inbox updateParent={this.updateState} userId={this.state.userId} />
@@ -99,7 +104,7 @@ class App extends Component {
           <DialogActions>
             <Button type='button' onClick={this.handleCloseInbox}>Close</Button>
           </DialogActions>
-        </Dialog>*/}
+        </Dialog>
       </div>
     );
   }

@@ -199,8 +199,6 @@ header.mdl-layout__header {
   text-align: center !important;
 }
 
-
-
 @media screen and (min-width: 1024px) {
   .hideOnLarge {
     display: none !important;
