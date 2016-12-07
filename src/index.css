@@ -29,6 +29,11 @@ dialog.mdl-dialog {
   padding-left: 0;
 }
 
+.mdl-dialog {
+  max-height: 80%;
+  overflow: scroll;
+}
+
 .time {
    font-size: 0.8em;
    color: darkgray;

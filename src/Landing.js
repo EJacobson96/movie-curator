@@ -16,6 +16,23 @@ class Landing extends Component {
     }
 }
 
+
+class Header extends React.Component {
+    render() {
+        return (
+            <header>
+                <h1 className="name">THE MOVIE CURATOR</h1>
+                <div>
+                    <ul>
+                        <li><Link to="/login">Login</Link></li>
+                        <li><Link to="/join" className="signUp">Sign Up</Link></li>
+                    </ul>
+                </div>
+            </header>
+        );
+    }
+}
+
 class Info extends React.Component {
     render() {
         return (
@@ -66,21 +83,5 @@ class GetStarted extends React.Component {
     }
 }
 
-class Header extends React.Component {
-    render() {
-        return (
-            <header>
-                <h1 className="name">THE MOVIE CURATOR</h1>
-                <div>
-                    <ul>
-                        <li><a href="#container-two">About</a></li>
-                        <li><Link to="/login">Login</Link></li>
-                        <li><Link to="/join" className="signUp">Sign Up</Link></li>
-                    </ul>
-                </div>
-            </header>
-        );
-    }
-}
-
+export { Header };
 export default Landing;

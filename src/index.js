@@ -9,6 +9,7 @@ import RecommendedMovie from'./Recommended';
 import AdvancedSearch from './AdvancedSearch';
 import Movies from './Movies';
 import Landing from './Landing';
+import Start from './Start';
 import RecommendedMoviePage from './RecommendedMoviesPage';
 import firebase from 'firebase';
 
@@ -35,7 +36,11 @@ firebase.initializeApp(config);
 
 ReactDOM.render(
   <Router history={hashHistory}>
-    <Route path="/landing" component={Landing} />
+    <Route path="start" component={Start}>
+      <IndexRoute component={Landing} />    
+      <Route path="/join" component={SignUpForm} />
+      <Route path="/login" component={SignInForm} />
+    </Route>
     <Route path="/" component={App}>
       <IndexRoute component={Watchlist} />
       <Route path="home" component={RecommendedMovie} />
@@ -44,8 +49,7 @@ ReactDOM.render(
       <Route path="search" component={AdvancedSearch} />
       <Route path="/movie/:movieId" component={Movies} />
     </Route>
-    <Route path="join" component={SignUpForm} />
-    <Route path="login" component={SignInForm} />
+    
   </Router>,
   document.getElementById('root')
 );
