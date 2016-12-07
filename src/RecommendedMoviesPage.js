@@ -3,7 +3,7 @@ import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
 import RecommendedController from './RecommendedController';
 import Controller from './DataController';
-import { DetailedMovieCard }  from './Movies';
+import { DetailedMovieCard } from './Movies';
 import _ from 'lodash';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, List, ListItem } from 'react-mdl';
 
@@ -12,7 +12,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, 
 class RecommendedMoviePage extends Component {
     constructor(props) {
         super(props);
-        this.state= {};
+        this.state = {};
         this.handleOpenDialog = this.handleOpenDialog.bind(this);
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
     }
@@ -29,6 +29,8 @@ class RecommendedMoviePage extends Component {
         this.setState({
             openDialog: false
         });
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = 'auto';
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
     //finds a given username and uploads a specified movie from current user
@@ -66,11 +68,11 @@ class RecommendedMoviePage extends Component {
 
     //retrieves given username input value
     updateUsername(event) {
-        this.setState({username:event.target.value })
+        this.setState({ username: event.target.value })
     }
-    
+
     //closes dialogbox and uplaods to firebase
-    submitMessage (e) {
+    submitMessage(e) {
         this.sendMessage(e);
         this.handleCloseDialog();
     }
@@ -86,14 +88,14 @@ class RecommendedMoviePage extends Component {
             }
         });
     }
-    
+
     componentWillUnmount() {
         if (this.unregister) {
             this.unregister();
         }
     }
 
-    render () {
+    render() {
         var content = <p>Please add some movies to your favorites first!</p>;
         if (this.state.user) {
             content = <RecommendedMovies dialogCallback={this.handleOpenDialog} user={this.state.user} />
@@ -142,9 +144,9 @@ class RecommendedMovies extends Component {
                 movieId = movieIdArray[randNum];
                 RecommendedController.search(movieId)
                     .then((data) => {
-                        var movies = data.results.slice(1,7);
+                        var movies = data.results.slice(1, 7);
                         recommended = data.results[0];
-                        this.setState({ movieData: movies, recommended:recommended.id });
+                        this.setState({ movieData: movies, recommended: recommended.id });
                         Controller.getMovieDetails(this.state.recommended)
                             .then((data) => {
                                 this.setState({ movie: data });
@@ -164,7 +166,7 @@ class RecommendedMovies extends Component {
                             });
                     })
                     .catch((err) => console.log(err));
-            } 
+            }
 
         });
     }
