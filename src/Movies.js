@@ -205,7 +205,7 @@ class DetailedMovieCard extends React.Component {
                     <Grid>
                         <Cell col={3} hidePhone hideTablet>
                             <div className="imgSection">
-                                <img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.movie.poster_path} role='presentation' />
+                                <img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.movie.poster_path} alt={this.props.original_title} role='presentation' />
                             </div>
                         </Cell>
 
