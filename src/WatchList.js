@@ -93,7 +93,6 @@ class WatchList extends Component {
                         </Cell>
                     </Grid>
                 </div>
-
             </div>
         )
     }
@@ -292,18 +291,18 @@ class MovieCard extends Component {
             var movieObject = snapshot.val();
             var idExists = this.checkId(this.props.MovieId, movieObject);
             if (!idExists) {
-                saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>
+                saved = <button className="btn btn-primary adder" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>
             } else {
-                saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">indeterminate_check_box</i></button>
+                saved = <button className="btn btn-primary adder" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons added">indeterminate_check_box</i></button>
             }
         })
         favoriteRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
             var idExists = this.checkId(this.props.MovieId, movieObject);
             if (!idExists) {
-                favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button>
+                favorited = <button className="btn btn-primary adder" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button>
             } else {
-                favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite</i></button>
+                favorited = <button className="btn btn-primary adder" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons added">favorite</i></button>
             }
         })
 
@@ -318,11 +317,13 @@ class MovieCard extends Component {
 
                     <Cell col={8}>
                         <div className="cardSection">
-                            <Link to={"/movie/" + this.props.MovieId}><h2>{this.props.MovieTitle}</h2></Link>
+                            <Link to={"/movie/" + this.props.MovieId}><h2 className="movie_title">{this.props.MovieTitle}</h2></Link>
                             <p>{this.props.MovieOverview}</p>
+                            <button className="btn btn-primary trailer"><p>Watch Trailer</p></button>
+                            <br/>
                             {saved}
                             {favorited}
-                            <i onClick={this.updateMessage} className="material-icons">mail_outline</i>
+                            <button className="btn btn-primary adder"><i onClick={this.updateMessage} className="material-icons">mail_outline</i></button>
                         </div>
                     </Cell>
                 </Grid>

@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from 'firebase';
 import { Grid, Cell, List, ListItem } from 'react-mdl';
-import YouTube from 'react-youtube';
+// import YouTube from 'react-youtube';
 import moment from 'moment';
 import { hashHistory } from 'react-router';
 import Controller from './DataController';
@@ -52,7 +52,7 @@ class Movies extends React.Component {
         }
     }
 
-    // In case user switches from one detailed movie, to the next 
+    // In case user switches from one detailed movie, to the next
     // ie: through use of the inbox, or navigating back/forth, changing url
     componentWillReceiveProps(nextProps) {
         this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {

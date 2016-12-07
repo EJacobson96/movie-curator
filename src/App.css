@@ -1,50 +1,55 @@
 .App {
-  text-align: center;
+   text-align: center;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+   animation: App-logo-spin infinite 20s linear;
+   height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+   background-color: #222;
+   height: 150px;
+   padding: 20px;
+   color: white;
 }
 
 .App-intro {
-  font-size: large;
+   font-size: large;
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+   from {
+      transform: rotate(0deg);
+   }
+   to {
+      transform: rotate(360deg);
+   }
 }
 
 @font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v18/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+   font-family: 'Material Icons';
+   font-style: normal;
+   font-weight: 400;
+   src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v18/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
 }
 
 .material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
+   font-family: 'Material Icons';
+   font-weight: normal;
+   font-style: normal;
+   font-size: 24px;
+   line-height: 1;
+   letter-spacing: normal;
+   text-transform: none;
+   display: inline-block;
+   white-space: nowrap;
+   word-wrap: normal;
+   direction: ltr;
+   -webkit-font-feature-settings: 'liga';
+   -webkit-font-smoothing: antialiased;
 }
+
 
 /*img {
   height: 316px;
@@ -53,44 +58,96 @@
   float: left;
 }*/
 
-.cardSection {
-  background-color: #f2f2f2;
-  /*width: 434px;*/
-  /*height: 316px;*/
-  /*margin-left: 232px;*/
+
+/* Krish's css starts here:*/
+
+#root .mdl-layout-title {
+   font-size: 1.1em;
+   margin-top: 10px;
+   font-weight: 600;
 }
 
-.movieCard h2 {
-  font-weight: bold;
-  font-size: 2rem;
+#root .mdl-navigation__link {
+   text-decoration: none;
+}
+
+#root .mdl-navigation__link:hover {
+   text-decoration: none;
+}
+
+.cardSection {
+   background-color: #f2f2f2;
+}
+
+.cardSection .movie_title {
+   color: #000;
+   font-size: 1.4em;
+   text-decoration: none;
+   margin-bottom: 20px;
+}
+
+.cardSection .movie_title:hover {
+   color: #000;
+}
+
+.cardSection p {
+   overflow: hidden;
+   display: -webkit-box;
+   -webkit-line-clamp: 4;
+   -webkit-box-orient: vertical;
+   text-overflow: ellipsis;
+   margin-bottom: 20px;
 }
 
 #root button {
-  background-color: #d9d9d9;
-  border-color: #d9d9d9;
+   border: none;
+   height: 40px;
 }
 
-#root .movieCard button:hover {
-  color: yellow;
-  font-weight: 700;
+#root .adder {
+   background-color: #f2f2f2;
+   color: #000;
+   margin-right: 5px;
+   transition: .3s all ease-in-out;
+   -webkit-transition: .3s all ease-in-out;
 }
 
-button p {
-  margin: 0px;
-  float: left;
-  margin-right: 5px;
+#root .adder p {
+   float: left;
+   margin-right: 5px;
 }
 
-#root .NowPlaying {
-  float:right;
-  margin-right: 13%;
+#root .adder:hover {
+   background-color: #d9d9d9;
+   color: #fff;
+   font-weight: 700;
 }
 
-#root .Watchlist {
-  float:left;
-  margin-left: 4%;
+.added {
+   color: #ff6666;
 }
 
-ul li {
-  margin: 3%;
+#root .trailer {
+   background-color: #AEB6BF;
+   color: #fff;
+   margin-bottom: 10px;
+   transition: .3s all ease-in-out;
+   -webkit-transition: .3s all ease-in-out;
+}
+
+#root .trailer:hover {
+   background-color: #5D6D7E;
+}
+
+#root .NowPlaying ul {
+   padding-left: 25px;
+}
+
+#root .NowPlaying ul a {
+   text-decoration: none;
+   color: #000;
+}
+
+#root .NowPlaying ul a:hover {
+   text-decoration: underline;
 }

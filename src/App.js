@@ -67,8 +67,8 @@ class App extends Component {
               expandableIcon="search"
               />
           </Header>
-          <Drawer title="The Movie Curator">
-            
+          <Drawer title="THE MOVIE CURATOR">
+
             <Navigation>
               <Link to="home">Home</Link>
               <Link to="watchlist">Movie Watchlist</Link>
@@ -82,7 +82,6 @@ class App extends Component {
               </Badge>
             </div>
             <div className="bottomNav">
-
               <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>
             </div>
           </Drawer>
