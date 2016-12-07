@@ -3,11 +3,13 @@ import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
 import RecommendedController from './RecommendedController';
 import NowPlayingController from './NowPlayingController';
-import { MovieData, MovieCard } from './WatchList';
+import { NowPlayingMovieData, MovieCard } from './Watchlist';
 import _ from 'lodash';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell } from 'react-mdl';
 
-class RecommendedMovie extends Component {
+
+//displays the home page containing now playing movies
+class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -15,13 +17,14 @@ class RecommendedMovie extends Component {
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
     }
 
-
+    //handles whether the message box should be open
     handleOpenDialog() {
         this.setState({
             openDialog: true,
         });
     }
 
+    //handles whether the message box should closed
     handleCloseDialog() {
         this.setState({
             openDialog: false
@@ -31,6 +34,8 @@ class RecommendedMovie extends Component {
         document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
+    //finds a given username and uploads a specified movie from current user
+    //into their inbox into firebase
     sendMessage(event) {
         var movieId = document.querySelector('#recommendLink').href;
         movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
@@ -40,9 +45,11 @@ class RecommendedMovie extends Component {
         var userRef = firebase.database().ref('users/');
         userRef.once('value', (snapshot) => {
             var object = snapshot.val();
-            var keys = Object.keys(object);
+            if (object != null) {
+                var keys = Object.keys(object);
+            }
             for (var i = 0; i < keys.length; i++) {
-                if (object[keys[i]].watchlist && object[keys[i]].handle == this.state.username) {
+                if (object[keys[i]].handle == this.state.username) {
                     userId = keys[i];
                     avatar = object[keys[i]].avatar;
                 }
@@ -61,10 +68,12 @@ class RecommendedMovie extends Component {
         })
     }
 
+    //retrieves given username input value
     updateUsername(event) {
         this.setState({ username: event.target.value })
     }
 
+    //closes dialogbox and uplaods to firebase
     submitMessage(e) {
         this.sendMessage(e);
         this.handleCloseDialog();
@@ -77,12 +86,12 @@ class RecommendedMovie extends Component {
                     user: firebaseUser
                 });
             } else {
-                hashHistory.push('/login');
+                hashHistory.push('/Start');
             }
         });
     }
 
-
+    //signs user out
     signOut() {
         firebase.auth().signOut()
         hashHistory.push('login');
@@ -92,7 +101,7 @@ class RecommendedMovie extends Component {
     render() {
         var content = null;
         if (this.state.user) {
-            content = <DisplayRecommendedMovies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
+            content = <DisplayFeaturedMovies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
         }
         return (
             <div>
@@ -117,8 +126,9 @@ class RecommendedMovie extends Component {
     }
 }
 
-
-class DisplayRecommendedMovies extends Component {
+// Displays the featured movie card and a list of other Suggestions
+// Using the queried now playing the tmdb api
+class DisplayFeaturedMovies extends Component {
     constructor(props) {
         super(props);
 
@@ -158,7 +168,7 @@ class DisplayRecommendedMovies extends Component {
                         {topMovie}
                     </Cell>
                     <Cell col={4} phone={12} offsetDesktop={1}>
-                        <MovieData />
+                        <NowPlayingMovieData />
                     </Cell>
                 </Grid>
                 <h1>Other Suggestions</h1>
@@ -174,4 +184,4 @@ class DisplayRecommendedMovies extends Component {
 
 
 
-export default RecommendedMovie;
+export default Home;

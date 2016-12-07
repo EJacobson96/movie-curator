@@ -82,22 +82,14 @@ class App extends Component {
                     <Header title="THE MOVIE CURATOR" className="hideOnLarge">
                     </Header>
                     <Drawer title="THE MOVIE CURATOR">
-
-
                         <Form>
-
                             <FormGroup>
                                 <InputGroup className="searchForm">
                                     <InputGroup.Addon><Glyphicon glyph="search" /></InputGroup.Addon>
                                     <FormControl className="quickSearch" aria-label="quick search" type="text" placeholder="Search" onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
                                 </InputGroup>
                             </FormGroup>
-
-
                         </Form>
-
-
-
                         <Navigation>
                             <Link to="home" activeClassName="activeLink">Home</Link>
                             <Link to="recommended" activeClassName="activeLink">Recommended Movies</Link>

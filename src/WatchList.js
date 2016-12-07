@@ -3,9 +3,10 @@ import NowPlayingController from './NowPlayingController';
 import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell } from 'react-mdl';
-import DialogBox from './DialogBox';
 
-class WatchList extends Component {
+// Takes the watchlist from current users in firebase and displays 
+// their saved watchlist movies
+class Watchlist extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -13,18 +14,22 @@ class WatchList extends Component {
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
     }
 
+    //handles whether the message box should be open
     handleOpenDialog() {
         this.setState({
             openDialog: true,
         });
     }
 
+    //handles whether the message box should closed
     handleCloseDialog() {
         this.setState({
             openDialog: false
         });
     }
 
+    //finds a given username and uploads a specified movie from current user
+    //into their inbox into firebase
     sendMessage(event) {
         var movieId = document.querySelector('#recommendLink').href;
         movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
@@ -34,9 +39,11 @@ class WatchList extends Component {
         var userRef = firebase.database().ref('users/');
         userRef.once('value', (snapshot) => {
             var object = snapshot.val();
-            var keys = Object.keys(object);
+            if (object != null) {
+                var keys = Object.keys(object);
+            }
             for (var i = 0; i < keys.length; i++) {
-                if (object[keys[i]].watchlist && object[keys[i]].handle == this.state.username) {
+                if (object[keys[i]].handle == this.state.username) {
                     userId = keys[i];
                     avatar = object[keys[i]].avatar;
                 }
@@ -56,10 +63,12 @@ class WatchList extends Component {
         })
     }
 
+    //retrieves given username input value
     updateUsername(event) {
         this.setState({ username: event.target.value })
     }
 
+    //closes dialogbox and uplaods to firebase
     submitMessage(e) {
         this.sendMessage(e);
         this.handleCloseDialog();
@@ -115,7 +124,7 @@ class WatchList extends Component {
                             {movies}
                         </Cell>
                         <Cell col={3} phone={12} tablet={12}>
-                            <MovieData />
+                            <NowPlayingMovieData />
                         </Cell>
                     </Grid>
                 </div>
@@ -124,7 +133,38 @@ class WatchList extends Component {
     }
 }
 
+// Fetches the now playing movie data and displays
+//10 of the movies using MovieCards
+class NowPlayingMovieData extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
 
+    componentDidMount() {
+        NowPlayingController.search()
+            .then((data) => {
+                var movies = data.results.slice(7, 17);
+                this.setState({ movieData: movies });
+            })
+            .catch((err) => console.log(err));
+        
+    }
+
+    render() {
+        var nowPlaying = <p>Loading movies...</p>;
+        if (this.state.movieData) {
+            nowPlaying = <NowPlaying searchMovies={this.state.movieData} />;
+        }
+        return (
+            <div>
+                {nowPlaying}
+            </div>
+        )
+    }
+}
+
+// Displays list of 10 now playing movies queried from the tmdb api
 class NowPlaying extends Component {
     render() {
         var nowPlaying = this.props.searchMovies.map((movie) => {
@@ -141,35 +181,9 @@ class NowPlaying extends Component {
     }
 }
 
-class MovieData extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    componentDidMount() {
-        NowPlayingController.search()
-            .then((data) => {
-                var movies = data.results.splice(0, 10);
-                this.setState({ movieData: movies });
-            })
-            .catch((err) => console.log(err));
-    }
-
-    render() {
-        var nowPlaying = <p>Loading movies...</p>;
-        if (this.state.movieData) {
-            nowPlaying = <NowPlaying searchMovies={this.state.movieData} />;
-        }
-        return (
-            <div>
-                {nowPlaying}
-            </div>
-        );
-    }
-}
-
-class Movies extends Component {
+// Uses Firebase to find all of the current user's watchlist movies
+// and displays them using MovieCard
+class WatchlistMovies extends Component {
     constructor(props) {
         super(props);
         this.state = { watchlist: [] };
@@ -203,10 +217,7 @@ class Movies extends Component {
     }
 
     render() {
-        // var movierow = this.state.watchlist.map((movie) => {
-        //     return <MovieCard  MoviePoster={movie.poster_path} MovieOverview={movie.overview}
-        //         MovieTitle={movie.original_title} MovieId={movie.id} key={movie.key} />;
-        // })
+
         return (
             <div className="">
                 <DisplayMovies user={this.props.user} dialogCallback={this.props.dialogCallback} movies={this.state.watchlist} />
@@ -215,6 +226,7 @@ class Movies extends Component {
     }
 }
 
+// Takes in an array of movies and displays them using MovieCards
 class DisplayMovies extends Component {
     render() {
         var movierow = this.props.movies.map((movie) => {
@@ -222,7 +234,7 @@ class DisplayMovies extends Component {
         })
 
         if (this.props.movies.length == 0) {
-            movierow = "No Movies Found"
+            movierow = "Please add movies to your watchlist!"
         }
 
         return (
@@ -233,15 +245,9 @@ class DisplayMovies extends Component {
     }
 }
 
+// Displays given movie title, overview and poster. Then, for each MovieCard displays
+//DisplayButtons component
 class MovieCard extends Component {
-    // updateMessage() {
-    //     var movieTitle = this.props.MovieTitle;
-    //     var movieId = this.props.MovieId;
-    //     this.props.dialogCallback();
-    //     document.querySelector('#recommendLink').href = '#/movie/' + movieId;
-    //     document.querySelector('#recommendLink').textContent = movieTitle;
-    // }
-
     render() {
         return (
             <div className="movieCard">
@@ -258,11 +264,6 @@ class MovieCard extends Component {
                                 <h2>{this.props.MovieTitle}</h2>
                             </Link>
                             <p>{this.props.MovieOverview}</p>
-
-                            {/*{saved}
-                            {favorited}
-                            <i onClick={this.updateMessage} className="material-icons">mail_outline</i>*/}
-
                             <div className="buttons">
                                 <DisplayButtons user={this.props.user} dialogCallback={this.props.dialogCallback} MoviePoster={this.props.MoviePoster} MovieOverview={this.props.MovieOverview} MovieTitle={this.props.MovieTitle} MovieId={this.props.MovieId} />
                             </div>
@@ -275,6 +276,7 @@ class MovieCard extends Component {
     }
 }
 
+//displays watchlist, favorite and message box buttons
 class DisplayButtons extends Component {
     constructor(props) {
         super(props);
@@ -282,6 +284,8 @@ class DisplayButtons extends Component {
         this.updateMessage = this.updateMessage.bind(this);
     }
 
+    //forcibly changes the text within the messagebox so that the movie id and title
+    //can be accessed by parent component
     updateMessage() {
         var movieTitle = this.props.MovieTitle;
         var movieId = this.props.MovieId;
@@ -290,6 +294,8 @@ class DisplayButtons extends Component {
         document.querySelector('#recommendLink').textContent = movieTitle;
     }
 
+    //if the clicked on movie is already in the watchlist, this method removes it from firebase. Otherwise,
+    //it adds the movie to firebase
     saveMovie(poster, title, overview, id) {
         var idRef = firebase.database().ref('users/' + this.props.user.uid + '/watchlist');
         idRef.once('value', (snapshot) => {
@@ -314,6 +320,8 @@ class DisplayButtons extends Component {
         this.setState({});
     }
 
+    //if the clicked on movie is already in favorites, this method removes it from firebase. Otherwise,
+    //it adds the movie to firebase
     favoriteMovie(id) {
         var idRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited');
         idRef.once('value', (snapshot) => {
@@ -332,6 +340,7 @@ class DisplayButtons extends Component {
         this.setState({});
     }
 
+    //checks if the given movie is in firebase
     checkId(movieId, obj) {
         if (obj == null) {
             return false;
@@ -380,11 +389,11 @@ class DisplayButtons extends Component {
             <div>
                 {saved}
                 {favorited}
-                <button className="btn btn-primary adder"><i onClick={this.updateMessage} className="material-icons">mail_outline</i></button>
+                <button onClick={this.updateMessage} className="btn btn-primary adder"><i className="material-icons">mail_outline</i></button>
             </div>
         )
     }
 }
 
-export { DisplayMovies, MovieData, MovieCard, DisplayButtons };
-export default WatchList;
+export { DisplayMovies, NowPlayingMovieData, MovieCard, DisplayButtons };
+export default Watchlist;

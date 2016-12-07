@@ -4,8 +4,8 @@ import App from './App';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import SignInForm from './SignIn';
 import SignUpForm from './SignUp';
-import Watchlist from './WatchList';
-import RecommendedMovie from'./Recommended';
+import Watchlist from './Watchlist';
+import Home from'./Home';
 import AdvancedSearch from './AdvancedSearch';
 import Movies from './Movies';
 import Landing from './Landing';
@@ -42,8 +42,8 @@ ReactDOM.render(
       <Route path="/login" component={SignInForm} />
     </Route>
     <Route path="/" component={App}>
-      <IndexRoute component={RecommendedMovie} />
-      <Route path="home" component={RecommendedMovie} />
+      <IndexRoute component={Home} />
+      <Route path="home" component={Home} />
       <Route path="recommended" component={RecommendedMoviePage} />
       <Route path="watchlist" component={Watchlist} />
       <Route path="search" component={AdvancedSearch} />

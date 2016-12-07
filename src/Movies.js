@@ -6,7 +6,7 @@ import moment from 'moment';
 import { hashHistory, Link } from 'react-router';
 import Controller from './DataController';
 import Comments from './Comments';
-import { DisplayButtons } from './WatchList';
+import { DisplayButtons } from './Watchlist';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, List, ListItem } from 'react-mdl';
 
 
@@ -42,9 +42,11 @@ class Movies extends React.Component {
         var userRef = firebase.database().ref('users/');
         userRef.once('value', (snapshot) => {
             var object = snapshot.val();
-            var keys = Object.keys(object);
+            if (object != null) {
+                var keys = Object.keys(object);
+            }
             for (var i = 0; i < keys.length; i++) {
-                if (object[keys[i]].watchlist && object[keys[i]].handle == this.state.username) {
+                if (object[keys[i]].handle == this.state.username) {
                     userId = keys[i];
                     avatar = object[keys[i]].avatar;
                 }

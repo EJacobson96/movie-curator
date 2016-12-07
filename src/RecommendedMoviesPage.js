@@ -7,6 +7,8 @@ import { DetailedMovieCard }  from './Movies';
 import _ from 'lodash';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, List, ListItem } from 'react-mdl';
 
+
+// Uses the favorited movies of user and displays a similar movie from that data
 class RecommendedMoviePage extends Component {
     constructor(props) {
         super(props);
@@ -15,18 +17,22 @@ class RecommendedMoviePage extends Component {
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
     }
 
+    //handles whether the message box should be open
     handleOpenDialog() {
         this.setState({
             openDialog: true,
         });
     }
 
+    //handles whether the message box should be open
     handleCloseDialog() {
         this.setState({
             openDialog: false
         });
     }
 
+    //finds a given username and uploads a specified movie from current user
+    //into their inbox into firebase
     sendMessage(event) {
         var movieId = document.querySelector('#recommendLink').href;
         movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
@@ -36,9 +42,11 @@ class RecommendedMoviePage extends Component {
         var userRef = firebase.database().ref('users/');
         userRef.once('value', (snapshot) => {
             var object = snapshot.val();
-            var keys = Object.keys(object);
+            if (object != null) {
+                var keys = Object.keys(object);
+            }
             for (var i = 0; i < keys.length; i++) {
-                if (object[keys[i]].watchlist && object[keys[i]].handle == this.state.username) {
+                if (object[keys[i]].handle == this.state.username) {
                     userId = keys[i];
                     avatar = object[keys[i]].avatar;
                 }
@@ -56,10 +64,12 @@ class RecommendedMoviePage extends Component {
         })
     }
 
+    //retrieves given username input value
     updateUsername(event) {
         this.setState({username:event.target.value })
     }
     
+    //closes dialogbox and uplaods to firebase
     submitMessage (e) {
         this.sendMessage(e);
         this.handleCloseDialog();
@@ -111,6 +121,9 @@ class RecommendedMoviePage extends Component {
     }
 }
 
+//Uses randomly generated favorited movie from current user's favorite list.
+//Then fetches the recommended movies from TMDB based off of that movie.
+//Displays the top recommended movie in a detailed view, and simply the images of the next 6.
 class RecommendedMovies extends Component {
     constructor(props) {
         super(props);
@@ -122,6 +135,7 @@ class RecommendedMovies extends Component {
             var movieObject = snapshot.val();
             var movieId;
             var recommended;
+            //Takes a randomly chosen movie from favorites list and fetches similar movies
             if (movieObject != null && Object.keys(movieObject).length > 0) {
                 var movieIdArray = Object.keys(movieObject);
                 var randNum = _.random(movieIdArray.length - 1);
