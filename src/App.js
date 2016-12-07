@@ -1,39 +1,18 @@
 import React, { Component } from 'react';
-import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Button, Badge, Textfield } from 'react-mdl';
+import './App.css';
+import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Badge, Textfield } from 'react-mdl';
 import { Link, hashHistory } from 'react-router';
 import SignIn from './SignIn';
 import Inbox from './Inbox';
 import firebase from 'firebase';
-
-
-
+import AdvancedSearch from './AdvancedSearch';
+import { Form, FormControl, InputGroup, Button, Glyphicon, FormGroup, ControlLabel } from 'react-bootstrap';
 
 import Controller from './DataController'
 
 import 'whatwg-fetch';
 
 class App extends Component {
-// <<<<<<< HEAD
-//   constructor(props) {
-//     super(props);
-
-//     this.state = { openInbox: false };
-
-//     this.handleOpenInbox = this.handleOpenInbox.bind(this);
-//     this.handleCloseInbox = this.handleCloseInbox.bind(this);
-//   }
-
-//   // Signs the user out
-//   signOut() {
-//     firebase.auth().signOut();
-//   }
-
-//   componentDidMount() {
-//     this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
-//       if (firebaseUser) {
-//         this.setState({
-//           userId: firebaseUser.uid
-// =======
     constructor(props) {
         super(props);
 
@@ -59,7 +38,6 @@ class App extends Component {
             } else {
                 hashHistory.push('/login');
             }
-// >>>>>>> advancedSearch
         });
     }
 
@@ -100,10 +78,20 @@ class App extends Component {
                     <Header title="The Movie Curator" className="hideOnLarge">
                     </Header>
                     <Drawer title="The Movie Curator">
-                    
+
 
                         <Form>
-                            <FormControl className="quickSearch" aria-label="quick search" type="text" placeholder="Search" onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
+                            {/*<FormGroup>
+                                <i class="fa fa-search"></i>
+                                <FormControl className="quickSearch" aria-label="quick search" type="text" placeholder="Search" onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
+                            </FormGroup>*/}
+
+                            <FormGroup>
+                                <InputGroup className="searchForm">
+                                    <InputGroup.Addon><Glyphicon glyph="search" /></InputGroup.Addon>
+                                    <FormControl className="quickSearch" aria-label="quick search" type="text" placeholder="Search" onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
+                                </InputGroup>
+                            </FormGroup>
 
                             {/*<FormGroup>
                                 <InputGroup>
@@ -115,9 +103,9 @@ class App extends Component {
 
 
                         <Navigation>
-                            <Link to="home">Home</Link>
-                            <Link to="watchlist">Movie Watchlist</Link>
-                            <Link to="search">Search For Movies</Link>
+                            <Link to="home" activeClassName="activeLink">Home</Link>
+                            <Link to="watchlist" activeClassName="activeLink">Movie Watchlist</Link>
+                            <Link to="search" activeClassName="activeLink">Search For Movies</Link>
                         </Navigation>
                         <div id="badgeContainer">
                             <Badge id="inboxBadge" text="..." overlap>
@@ -127,7 +115,6 @@ class App extends Component {
                             </Badge>
                         </div>
                         <div className="bottomNav">
-
                             <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>
                         </div>
                     </Drawer>

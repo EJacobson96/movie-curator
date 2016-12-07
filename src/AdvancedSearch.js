@@ -6,7 +6,6 @@ import MovieController from './MovieController';
 import { DisplayMovies } from './WatchList';
 import { PleaseWork, MovieCard } from './WatchList';
 import { Grid, Cell } from 'react-mdl';
-//import md5 from 'js-md5';
 
 // import './App.css';
 // import './index.css';
