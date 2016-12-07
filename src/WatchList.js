@@ -26,6 +26,8 @@ class Watchlist extends Component {
         this.setState({
             openDialog: false
         });
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = 'auto';
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
     //finds a given username and uploads a specified movie from current user
@@ -148,7 +150,7 @@ class NowPlayingMovieData extends Component {
                 this.setState({ movieData: movies });
             })
             .catch((err) => console.log(err));
-        
+
     }
 
     render() {
@@ -202,7 +204,7 @@ class WatchlistMovies extends Component {
             var watchlistArray = []; //could also do this processing in render
             var movieObjects = snapshot.val();
             if (movieObjects) {
-                Object.keys(movieObjects).forEach(function(child) {
+                Object.keys(movieObjects).forEach(function (child) {
                     watchlistArray.push(movieObjects[child]); //make into an array
                 });
             }

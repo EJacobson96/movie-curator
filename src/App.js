@@ -52,13 +52,13 @@ class App extends Component {
     }
 
     handleCloseInbox() {
-        console.log('closing');
         this.setState({ openInbox: false });
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = 'auto';
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
     handleSearchChange(event) {
         var titleSearch = event.target.value;
-        console.log("title to search: ", titleSearch);
         this.setState({ title: titleSearch });
     }
 
