@@ -96,7 +96,7 @@ class Watchlist extends Component {
     render() {
         var movies = <p>There are no movies in your watchlist.</p>;
         if (this.state.user) {
-            movies = <Movies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
+            movies = <WatchlistMovies user={this.state.user} dialogCallback={this.handleOpenDialog} />;
         }
 
         return (
