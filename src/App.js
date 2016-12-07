@@ -83,7 +83,7 @@ class App extends Component {
                     
 
                         <Form>
-                            <FormControl aria-label="quick search" type="text" placeholder="Quick Search..." onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
+                            <FormControl className="quickSearch" aria-label="quick search" type="text" placeholder="Search" onChange={this.handleSearchChange} onKeyPress={this.handleSearch} />
 
                             {/*<FormGroup>
                                 <InputGroup>
