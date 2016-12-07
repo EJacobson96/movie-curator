@@ -45,7 +45,7 @@ class SignUpForm extends React.Component {
     /* Create a new user and save their information */
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(function (firebaseUser) {
-        hashHistory.push('watchlist');
+        hashHistory.push('home');
         //include information (for app-level content)
         var profilePromise = firebaseUser.updateProfile({
           displayName: handle,
@@ -132,7 +132,7 @@ class SignUpForm extends React.Component {
 
             <ValidatedInput field="password" type="password" label="Your Password" changeCallback={this.handleChange} errors={passwordErrors} />
 
-            <ValidatedInput field="confirmPassword" type="password" label="Retype Your Password" changeCallback={this.handleChange} errors={passwordErrors} />
+            <ValidatedInput field="confirmPassword" type="password" label="Retype Your Password" changeCallback={this.handleChange} errors={confirmpasswordErrors} />
 
             {/* full html for the URL (because image) */}
 
@@ -176,7 +176,7 @@ class ValidationErrors extends React.Component {
           <p className="help-block">Not an email address!</p>
         }
         {this.props.errors.minLength &&
-          <p className="help-block">Must be at least {this.props.errors.minLength}characters.</p>
+          <p className="help-block">Must be at least {this.props.errors.minLength} characters.</p>
         }
       </div>
     );

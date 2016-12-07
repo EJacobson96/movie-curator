@@ -1,18 +1,76 @@
 import React from 'react';
 import firebase from 'firebase';
-import { Grid, Cell, List, ListItem } from 'react-mdl';
+// import YouTube from 'react-youtube';
 import YouTube from 'react-youtube';
 import moment from 'moment';
-import { hashHistory } from 'react-router';
+import { hashHistory, Link } from 'react-router';
 import Controller from './DataController';
 import Comments from './Comments';
+import { DisplayButtons } from './Watchlist';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, List, ListItem } from 'react-mdl';
 
 
 class Movies extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {};
+        this.handleOpenDialog = this.handleOpenDialog.bind(this);
+        this.handleCloseDialog = this.handleCloseDialog.bind(this);
+    }
+
+    handleOpenDialog() {
+        this.setState({
+            openDialog: true,
+        });
+    }
+
+    handleCloseDialog() {
+        this.setState({
+            openDialog: false
+        });
+        // Workaround for React-MDL Dialog bug
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = 'auto';
+        document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
+    }
+
+    sendMessage(event) {
+        var movieId = document.querySelector('#recommendLink').href;
+        movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
+        var movieTitle = document.querySelector('#recommendLink').textContent;
+        var userId;
+        var avatar;
+        var userRef = firebase.database().ref('users/');
+        userRef.once('value', (snapshot) => {
+            var object = snapshot.val();
+            if (object != null) {
+                var keys = Object.keys(object);
+            }
+            for (var i = 0; i < keys.length; i++) {
+                if (object[keys[i]].handle == this.state.username) {
+                    userId = keys[i];
+                    avatar = object[keys[i]].avatar;
+                }
+            }
+            var inboxRef = firebase.database().ref('users/' + userId + '/inbox');
+            var newMessage = {
+                content: movieTitle,
+                id: movieId,
+                date: firebase.database.ServerValue.TIMESTAMP,
+                fromUserAvatar: this.state.user.photoURL,
+                fromUserID: this.state.user.uid,
+                fromUserName: this.state.user.displayName
+            };
+            inboxRef.push(newMessage);
+        })
+    }
+
+    updateUsername(event) {
+        this.setState({ username: event.target.value })
+    }
+
+    submitMessage(e) {
+        this.sendMessage(e);
+        this.handleCloseDialog();
     }
 
     componentDidMount() {
@@ -52,7 +110,7 @@ class Movies extends React.Component {
         }
     }
 
-    // In case user switches from one detailed movie, to the next 
+    // In case user switches from one detailed movie, to the next
     // ie: through use of the inbox, or navigating back/forth, changing url
     componentWillReceiveProps(nextProps) {
         this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
@@ -88,8 +146,8 @@ class Movies extends React.Component {
 
     render() {
         var card = [];
-        if (this.state.movie && this.state.cast) {
-            card = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} trailer={this.state.trailer} />;
+        if (this.state.movie && this.state.cast && this.state.user) {
+            card = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} user={this.state.user} trailer={this.state.trailer} dialogCallback={this.handleOpenDialog} />;
         }
 
         var comments = [];
@@ -99,6 +157,21 @@ class Movies extends React.Component {
 
         return (
             <div className="moviePage">
+                <Dialog open={this.state.openDialog} onCancel={this.handleCloseDialog}>
+                    <DialogTitle>Share A Movie</DialogTitle>
+                    <DialogContent>
+                        <form role="form">
+                            <textarea placeholder="Friend's Username" name="text" className="form-control" onChange={(e) => this.updateUsername(e)}></textarea>
+                            <p id="recommendMessage">You should watch <Link id="recommendLink" to=""></Link>!</p>
+                            <div className="form-group">
+                            </div>
+                        </form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button type='button' onClick={this.handleCloseDialog}>Close</Button>
+                        <Button type='button' onClick={(e) => this.submitMessage(e)}>Send</Button>
+                    </DialogActions>
+                </Dialog>
                 <h1>Movie Details</h1>
                 {card}
 
@@ -110,8 +183,9 @@ class Movies extends React.Component {
 }
 
 class DetailedMovieCard extends React.Component {
+
     render() {
-        console.log('movie', this.props.movie);
+
 
         var runtime = (parseInt(this.props.movie.runtime / 60)) + 'h ' + this.props.movie.runtime % 60 + 'm';
         var releaseDate = moment(this.props.movie.release_date).format('MMMM Do, YYYY');
@@ -158,16 +232,10 @@ class DetailedMovieCard extends React.Component {
                                             <p className="contentParagraph">{releaseDate + ' • ' + genres + ' film • ' + runtime}</p>
 
                                             <p className="contentParagraph">{this.props.movie.overview}</p>
-
-                                            <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.movie.poster_path, this.props.movie.original_title, this.props.movie.overview)}>
-                                                <p>Watchlist</p>
-                                                <i className="material-icons">add_to_queue</i>
-                                            </button>
-
-                                            <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.movie.poster_path, this.props.movie.original_title, this.props.movie.overview)}>
-                                                <p>Favorite</p>
-                                                <i className="material-icons">favorite_border</i>
-                                            </button>
+                                            <div className="buttons">
+                                                <DisplayButtons dialogCallback={this.props.dialogCallback} MoviePoster={this.props.movie.poster_path} MovieTitle={this.props.movie.original_title}
+                                                    MovieOverview={this.props.movie.overview} MovieId={this.props.movie.id} user={this.props.user} />
+                                            </div>
                                         </Cell>
                                     </Cell>
 
@@ -208,4 +276,5 @@ class DetailedMovieCard extends React.Component {
     }
 }
 
+export { DetailedMovieCard };
 export default Movies;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import moment from 'moment';
+import { Link } from 'react-router';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemAction, Icon, ListItemContent } from 'react-mdl';
 
 import Controller from './DataController';
@@ -42,6 +43,7 @@ class MessageList extends React.Component {
         if (this.props.messages) {
             var messageArray = Object.keys(this.props.messages);
             messages = messageArray.map((message) => {
+                console.log(message);
                 return <Message userId={this.props.userId} messageId={message} message={this.props.messages[message]} />
             });
         } else {
@@ -69,7 +71,8 @@ class Message extends React.Component {
     }
 
     render() {
-        var content = this.props.message.content;
+        var sentence = "Check out the movie";
+        var content = <Link to={'movie/' + this.props.message.id}>{"Check out the movie " + this.props.message.content + "!"}</Link>;
         var author = this.props.message.fromUserName;
         var avatar = <img src={this.props.message.fromUserAvatar} alt={author} />;
         var date = this.props.message.date;
