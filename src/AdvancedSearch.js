@@ -34,13 +34,12 @@ class AdvancedSearch extends React.Component {
   constructor(props) {
     super(props);
 
-    var theMovieTitle = '';
-    if(this.props.location.query.q){
-      theMovieTitle = this.props.location.query.q;
-    }
+    // var theMovieTitle = '';
+    // if (this.props.location.query.q) {
+    //   theMovieTitle = this.props.location.query.q;
+    // }
 
     this.state = {
-      title: theMovieTitle,
       movies: []
     };
 
@@ -67,33 +66,32 @@ class AdvancedSearch extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.location !== this.props.location) {
+      var theMovieTitle = '';
+      if (nextProps.location.query.q) {
+        theMovieTitle = nextProps.location.query.q;
+      }
 
-    var theMovieTitle = '';
-    if(nextProps.location.query.q){
-      theMovieTitle = nextProps.location.query.q;
+      this.fetchData(nextProps.location.query.q);
     }
-
-    console.log("new location", nextProps.location);
-    this.setState({title: theMovieTitle});
   }
 
   //helper method
   fetchData(title, year, genre) {
-    var thisComponent = this;
     MovieController.search(title, year, genre)
-      .then(function (data) {
-        console.log(data);
-        thisComponent.setState({
+      .then((data) => {
+        this.setState({
           movies: data.results
-        })
+        });
 
         if (genre && title) {    // if searching by genre and title
-          console.log("searching both title and genre: " + thisComponent.state.movies)
           // array filtered with genreIDs matching genre search
-          var titleGenreMovies = thisComponent.state.movies.filter((movie) => {
-            return movie.genre_ids.some((genreID) => { return genreID == genre });   // checks genre_ids array for matches to genre searched
-          })
-          thisComponent.setState({ movies: titleGenreMovies })   // sets new array of movie objects to state    
+          var titleGenreMovies = this.state.movies.filter((movie) => {
+            // checks genre_ids array for matches to genre searched
+            return movie.genre_ids.some((genreID) => { return genreID == genre });
+          });
+          // sets new array of movie objects to state
+          this.setState({ movies: titleGenreMovies });
         }
       });
 
@@ -181,52 +179,48 @@ class SearchForm extends React.Component {
 
   }
 
-  componentWillReceiveProps(nextProps){
-   //   look like the above thing a bit
+  componentWillReceiveProps(nextProps) {
+    //   look like the above thing a bit
     var theMovieTitle = '';
-    if(nextProps && (nextProps !== this.props)){
+    if (nextProps && (nextProps !== this.props)) {
       theMovieTitle = nextProps;
-      console.log("new movie", nextProps);
-     //set the state to be new
-    this.setState({title: theMovieTitle.movieTitle});
+      //set the state to be new
+      this.setState({ title: theMovieTitle.movieTitle });
     }
 
-    console.log("yo");
-     //call your search function
+    //call your search function
     this.props.searchCallback(this.state.title);
-    
+
   }
 
   handleClick(event) {
     event.preventDefault();
-    console.log("You clicked search!");
-    console.log('the state title is: ' + this.state.title);
-
     this.props.searchCallback(this.state.title, this.state.year, this.state.genre);
   }
 
   handleChangeTitle(event) {
     var titleSearch = event.target.value;
-    console.log("title to search: ", titleSearch);
     this.setState({ title: titleSearch });
   }
 
 
-    handleChangeYear(event) {
-        var yearSearch = event.target.value;
-        console.log("year to search: ", yearSearch);
-        this.setState({year: yearSearch});
-    }
-    
+  handleChangeYear(event) {
+    var yearSearch = event.target.value;
+    this.setState({ year: yearSearch });
+  }
+
 
   handleChangeGenre(event) {
-
     var newGenre = event.target.value;
-    console.log("genre to search:", newGenre);
     this.setState({ genre: newGenre });
   }
 
   render() {
+
+    var genreArray = Object.keys(genresObj);
+    var options = genreArray.map((key) => {
+      return <option value={key}>{genresObj[key]}</option>;
+    });
 
     return (
       <Form inline>
@@ -246,25 +240,7 @@ class SearchForm extends React.Component {
           <ControlLabel>Genre</ControlLabel>
           <FormControl componentClass="select" placeholder="select" onChange={(e) => this.handleChangeGenre(e)}>
             <option value="">Select</option>
-            <option value="28">Action</option>
-            <option value="12">Adventure</option>
-            <option value="16">Animation</option>
-            <option value="35">Comedy</option>
-            <option value="80">Crime</option>
-            <option value="99">Documentary</option>
-            <option value="18">Drama</option>
-            <option value="10751">Family</option>
-            <option value="14">Fantasy</option>
-            <option value="36">History</option>
-            <option value="27">Horror</option>
-            <option value="10402">Music</option>
-            <option value="9648">Mystery</option>
-            <option value="10749">Romance</option>
-            <option value="878">Science Fiction</option>
-            <option value="10770">TV Movie</option>
-            <option value="53">Thriller</option>
-            <option value="10752">War</option>
-            <option value="37">Western</option>
+            {options}
           </FormControl>
         </FormGroup>
         {' '}
