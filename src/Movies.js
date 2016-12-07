@@ -6,6 +6,7 @@ import moment from 'moment';
 import { hashHistory } from 'react-router';
 import Controller from './DataController';
 import Comments from './Comments';
+import { DisplayButtons }  from './WatchList'
 
 
 class Movies extends React.Component {
@@ -88,8 +89,8 @@ class Movies extends React.Component {
 
     render() {
         var card = [];
-        if (this.state.movie && this.state.cast) {
-            card = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} trailer={this.state.trailer} />;
+        if (this.state.movie && this.state.cast && this.state.user) {
+            card = <DetailedMovieCard cast={this.state.cast} movie={this.state.movie} user={this.state.user} trailer={this.state.trailer} />;
         }
 
         var comments = [];
@@ -158,16 +159,8 @@ class DetailedMovieCard extends React.Component {
                                             <p className="contentParagraph">{releaseDate + ' • ' + genres + ' film • ' + runtime}</p>
 
                                             <p className="contentParagraph">{this.props.movie.overview}</p>
-
-                                            <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.movie.poster_path, this.props.movie.original_title, this.props.movie.overview)}>
-                                                <p>Watchlist</p>
-                                                <i className="material-icons">add_to_queue</i>
-                                            </button>
-
-                                            <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.movie.poster_path, this.props.movie.original_title, this.props.movie.overview)}>
-                                                <p>Favorite</p>
-                                                <i className="material-icons">favorite_border</i>
-                                            </button>
+                                            <DisplayButtons MoviePoster={this.props.movie.poster_path} MovieTitle={this.props.movie.original_title}
+                                            MovieOverview={this.props.movie.overview} MovieId={this.props.movie.id} user={this.props.user} />
                                         </Cell>
                                     </Cell>
 
@@ -208,4 +201,5 @@ class DetailedMovieCard extends React.Component {
     }
 }
 
+export { DetailedMovieCard };
 export default Movies;

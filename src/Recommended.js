@@ -3,6 +3,7 @@ import firebase from 'firebase';
 import { Link, hashHistory } from 'react-router';
 import { Grid, Cell } from 'react-mdl';
 import RecommendedController from './RecommendedController';
+import NowPlayingController from './NowPlayingController';
 import { MovieData, MovieCard } from './WatchList';
 import _ from 'lodash';
 
@@ -35,7 +36,7 @@ class RecommendedMovie extends Component {
     render() {
         console.log('hello');
 
-        var content = <p>Please add some movies to your favorites first!</p>;
+        var content = null;
         if (this.state.user) {
             content = <DisplayRecommendedMovies user={this.state.user} />;
         }
@@ -55,29 +56,13 @@ class DisplayRecommendedMovies extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-        var favoritesRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited');
-        favoritesRef.on('value', (snapshot) => {
-            console.log('recommended snapshot', snapshot.val());
-            var movieObject = snapshot.val();
-            var movieIdArray = Object.keys(movieObject);
-            console.log(movieIdArray);
-            var randNum = 0;
-            var movieId = 0;
-            if (movieIdArray.length > 0) {
-                randNum = _.random(0, movieIdArray.length - 1);
-                movieId = movieIdArray[randNum];
-                console.log(randNum);
-            }
-
-            RecommendedController.search(movieId)
-                .then((data) => {
-                    var movies = data.results.slice(0, 6);
-                    var top = data.results[6];
-                    this.setState({ movieData: movies, top: top });
-                })
-                .catch((err) => console.log(err));
-        });
+    componentDidMount() {     
+        NowPlayingController.search()
+            .then((data) => {
+                var movies = data.results.slice(1, 7);
+                var top = data.results[0];
+                this.setState({ movieData: movies, top: top });
+            })
     }
 
     render() {
@@ -100,7 +85,7 @@ class DisplayRecommendedMovies extends Component {
             <div>
                 <Grid>
                     <Cell col={7}>
-                        <h1>Top Recommended Movie</h1>
+                        <h1>Featured Movie of the Day</h1>
                         {topMovie}
                     </Cell>
                     <Cell col={5}>

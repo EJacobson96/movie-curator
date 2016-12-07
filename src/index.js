@@ -9,6 +9,7 @@ import RecommendedMovie from'./Recommended';
 import AdvancedSearch from './AdvancedSearch';
 import Movies from './Movies';
 import Landing from './Landing';
+import RecommendedMoviePage from './RecommendedMoviesPage';
 import firebase from 'firebase';
 
 import 'react-mdl/extra/material.css';
@@ -37,6 +38,7 @@ ReactDOM.render(
     <Route path="/" component={App}>
       <IndexRoute component={Watchlist} />
       <Route path="home" component={RecommendedMovie} />
+      <Route path="recommended" component={RecommendedMoviePage} />
       <Route path="watchlist" component={Watchlist} />
       <Route path="advanced" component={AdvancedSearch} />
       <Route path="/movie/:movieId" component={Movies} />
