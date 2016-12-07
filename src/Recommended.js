@@ -72,8 +72,8 @@ class DisplayRecommendedMovies extends Component {
 
             RecommendedController.search(movieId)
                 .then((data) => {
-                    var movies = data.results.slice(0, 5);
-                    var top = data.results[5];
+                    var movies = data.results.slice(0, 6);
+                    var top = data.results[6];
                     this.setState({ movieData: movies, top: top });
                 })
                 .catch((err) => console.log(err));
@@ -89,7 +89,7 @@ class DisplayRecommendedMovies extends Component {
         if (this.state.movieData) {
             movieRow = this.state.movieData.map((movie) => {
                 return (
-                    <Cell col={2}>
+                    <Cell col={2} phone={12} tablet={3}>
                         <Link to={'movie/' + movie.id}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + movie.poster_path} role='presentation' />
                         </Link>
                     </Cell>
@@ -99,18 +99,20 @@ class DisplayRecommendedMovies extends Component {
         return (
             <div>
                 <Grid>
-                    <Cell col={8}>
+                    <Cell col={7}>
                         <h1>Top Recommended Movie</h1>
                         {topMovie}
                     </Cell>
-                    <Cell col={4}>
+                    <Cell col={5}>
                         <MovieData />
                     </Cell>
                 </Grid>
                 <h1>Other Suggestions</h1>
-                <Grid>
-                    {movieRow}
-                </Grid>
+                <div className="recommendedMovieList">
+                    <Grid>
+                        {movieRow}
+                    </Grid>
+                </div>
             </div >
         )
     }

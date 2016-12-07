@@ -21,7 +21,7 @@ class Inbox extends React.Component {
                 loading: false
             });
             if(snapshot.val()) {
-                document.querySelector('#inboxBadge').setAttribute('data-badge', snapshot.val().length - 1);
+                document.querySelector('#inboxBadge').setAttribute('data-badge', Object.keys(snapshot.val()).length);
             } else {
                 document.querySelector('#inboxBadge').setAttribute('data-badge', '0');
             }
@@ -40,8 +40,9 @@ class MessageList extends React.Component {
         console.log(this.props.messages);
         var messages = <p>Loading messages...</p>;
         if (this.props.messages) {
-            messages = this.props.messages.map((message) => {
-                return <Message userId={this.props.userId} message={message} />
+            var messageArray = Object.keys(this.props.messages);
+            messages = messageArray.map((message) => {
+                return <Message userId={this.props.userId} messageId={message} message={this.props.messages[message]} />
             });
         } else {
             messages = <p>No new messages here.</p>;
@@ -64,7 +65,7 @@ class Message extends React.Component {
 
     deleteMessage() {
         console.log(this.props.message);
-        firebase.database().ref('users/' + this.props.userId + '/inbox/' + this.props.message.id).remove();
+        firebase.database().ref('users/' + this.props.userId + '/inbox/' + this.props.messageId).remove();
     }
 
     render() {

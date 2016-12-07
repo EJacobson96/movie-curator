@@ -8,6 +8,9 @@ import { PleaseWork, MovieCard } from './WatchList';
 import { Grid, Cell } from 'react-mdl';
 //import md5 from 'js-md5';
 
+// import './App.css';
+// import './index.css';
+
 const genresObj = {
   28: 'Action',
   12: 'Adventure',
