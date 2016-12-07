@@ -9,6 +9,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, Cell } from 'r
 // import './App.css';
 // import './index.css';
 
+// genreIDs that correspond with genre in API
 const genresObj = {
     28: 'Action',
     12: 'Adventure',
@@ -31,6 +32,8 @@ const genresObj = {
     37: 'Western'
 };
 
+// Allows user to search for movies then displays the results.
+// Then, from results user can send message, like, or add to watchlist
 class AdvancedSearch extends React.Component {
     constructor(props) {
         super(props);
@@ -54,6 +57,7 @@ class AdvancedSearch extends React.Component {
         });
     }
 
+    // sends message to user provided 
     sendMessage(event) {
         var movieId = document.querySelector('#recommendLink').href;
         movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
@@ -124,7 +128,8 @@ class AdvancedSearch extends React.Component {
     }
 
 
-    //helper method
+    //helper method- calls MovieController search function to fetch 
+    //data from API based on parameters passed in
     fetchData(title, year, genre) {
         MovieController.search(title, year, genre)
             .then((data) => {
@@ -172,7 +177,6 @@ class AdvancedSearch extends React.Component {
                 </header>
                 <main>
                     <SearchForm totalResults={this.state.totalResults} searchCallback={this.fetchData} />
-                    {/*<MovieTable movies={this.state.movies} />*/}
                     <Grid>
                         <Cell col={10}>
                             {displayMovies}
@@ -184,46 +188,8 @@ class AdvancedSearch extends React.Component {
     }
 }
 
-//table of movie data
-class MovieTable extends React.Component {
-    render() {
-        var rows = this.props.movies.map(function(movieObj) {
-            return <MovieRow movie={movieObj} />;
-        });
-
-        return (
-            <table className="table table-hover">
-                <thead>
-                    <tr><th className="col-xs-1">Poster</th><th className="col-xs-4">Title</th><th>Released</th><th>Genre</th></tr>
-                </thead>
-                <tbody>
-                    {rows}
-                </tbody>
-            </table>
-        );
-    }
-}
-
-class MovieRow extends React.Component {
-    render() {
-
-        var posterUrl = MovieController.getPosterUrl(this.props.movie);
-
-        var genreNames = this.props.movie.genre_ids.map(function(genreID) {    // converts genreIDs into words
-            return genresObj[genreID] + "/"
-        })
-
-        return (
-            <tr>
-                <td><img className="poster-lg" src={posterUrl} alt="poster for movie title" /></td>
-                <td>{this.props.movie.title}</td>
-                <td>{this.props.movie.release_date}</td>
-                <td>{genreNames}</td>
-            </tr>
-        );
-    }
-}
-
+//Displays a form for user to input search information along 
+//with search button that calls searchCallback function 
 class SearchForm extends React.Component {
 
     constructor(props) {
@@ -241,9 +207,7 @@ class SearchForm extends React.Component {
 
     }
 
-
     componentWillReceiveProps(nextProps) {
-        //   look like the above thing a bit
         var theMovieTitle = '';
         if (nextProps && (nextProps !== this.props)) {
             theMovieTitle = nextProps;
@@ -255,36 +219,36 @@ class SearchForm extends React.Component {
         this.props.searchCallback(this.state.title);
 
     }
-
+    // submits form
     handleClick(event) {
         event.preventDefault();
         this.props.searchCallback(this.state.title, this.state.year, this.state.genre);
     }
-
+    //updates title
     handleChangeTitle(event) {
         var titleSearch = event.target.value;
         this.setState({ title: titleSearch });
     }
-
+    //updates year
     handleChangeYear(event) {
         var yearSearch = event.target.value;
         this.setState({ year: yearSearch });
     }
-
-
+    //updates genre
     handleChangeGenre(event) {
         var newGenre = event.target.value;
         this.setState({ genre: newGenre });
     }
 
     render() {
+        //generates genre options
         var genreArray = Object.keys(genresObj);
         var options = genreArray.map((key) => {
             return <option value={key}>{genresObj[key]}</option>;
         });
 
         return (
-            <Form inline>
+            <Form inline role="form">
                 <FormGroup controlId="formInlineTitle">
                     <ControlLabel>Title</ControlLabel>
                     {' '}
