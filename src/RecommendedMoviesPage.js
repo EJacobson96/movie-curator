@@ -125,8 +125,6 @@ class RecommendedMovies extends Component {
             if (movieObject != null && Object.keys(movieObject).length > 0) {
                 var movieIdArray = Object.keys(movieObject);
                 var randNum = _.random(movieIdArray.length - 1);
-                console.log('raaannndddommmm', randNum);
-                console.log('raaannndddommmm movieArray', movieIdArray);
                 movieId = movieIdArray[randNum];
                 RecommendedController.search(movieId)
                     .then((data) => {
@@ -157,17 +155,17 @@ class RecommendedMovies extends Component {
         });
     }
     render() {
+        var movieRowHeader;
         var topMovie = <p>Please add some movies to your favorites first!</p>;
         if (this.state.movie && this.state.cast && this.props.user && this.state.trailer) {
-        }
-        if (this.state.movie && this.state.cast && this.props.user && this.state.trailer) {
             topMovie = <DetailedMovieCard dialogCallback={this.props.dialogCallback} cast={this.state.cast} movie={this.state.movie} user={this.props.user} trailer={this.state.trailer} />;
+            movieRowHeader = <h1>Other Recommendations</h1>;
         }
         var movieRow = null;
         if (this.state.movieData) {
             movieRow = this.state.movieData.map((movie) => {
                 return (
-                    <Cell col={2}>
+                    <Cell col={2} phone={12} tablet={3}>
                         <Link to={'movie/' + movie.id}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + movie.poster_path} role='presentation' />
                         </Link>
                     </Cell>
@@ -178,7 +176,7 @@ class RecommendedMovies extends Component {
             <div className="moviePage">
                 <h1>Movie Details</h1>
                 {topMovie}
-                <h1>Other Recommendations</h1>
+                {movieRowHeader}
                 <div className="recommendedMovieList">
                     <Grid>
                         {movieRow}

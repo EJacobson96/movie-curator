@@ -42,7 +42,7 @@ ReactDOM.render(
       <Route path="/login" component={SignInForm} />
     </Route>
     <Route path="/" component={App}>
-      <IndexRoute component={Watchlist} />
+      <IndexRoute component={RecommendedMovie} />
       <Route path="home" component={RecommendedMovie} />
       <Route path="recommended" component={RecommendedMoviePage} />
       <Route path="watchlist" component={Watchlist} />

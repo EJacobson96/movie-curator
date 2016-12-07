@@ -154,7 +154,7 @@ class DisplayRecommendedMovies extends Component {
             <div>
                 <Grid>
                     <Cell col={7}>
-                        <h1>Featured Movie of the Day</h1>
+                        <h1>Featured Movie</h1>
                         {topMovie}
                     </Cell>
                     <Cell col={4} phone={12} offsetDesktop={1}>
