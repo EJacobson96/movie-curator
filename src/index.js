@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import './index.css';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import SignInForm from './SignIn';
 import SignUpForm from './SignUp';
@@ -9,12 +8,15 @@ import Watchlist from './WatchList';
 import RecommendedMovie from'./Recommended';
 import AdvancedSearch from './AdvancedSearch';
 import Movies from './Movies';
+import Landing from './Landing';
 import firebase from 'firebase';
 
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
+import './index.css';
+
 
 
 // Initialize Firebase
@@ -31,6 +33,7 @@ firebase.initializeApp(config);
 
 ReactDOM.render(
   <Router history={hashHistory}>
+    <Route path="/landing" component={Landing} />
     <Route path="/" component={App}>
       <IndexRoute component={Watchlist} />
       <Route path="home" component={RecommendedMovie} />

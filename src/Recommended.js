@@ -89,7 +89,7 @@ class DisplayRecommendedMovies extends Component {
         if (this.state.movieData) {
             movieRow = this.state.movieData.map((movie) => {
                 return (
-                    <Cell col={2}>
+                    <Cell col={2} phone={12} tablet={3}>
                         <Link to={'movie/' + movie.id}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + movie.poster_path} role='presentation' />
                         </Link>
                     </Cell>
@@ -103,7 +103,7 @@ class DisplayRecommendedMovies extends Component {
                         <h1>Top Recommended Movie</h1>
                         {topMovie}
                     </Cell>
-                    <Cell offset={1} col={4}>
+                    <Cell col={5}>
                         <MovieData />
                     </Cell>
                 </Grid>

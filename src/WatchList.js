@@ -84,11 +84,11 @@ class WatchList extends Component {
                 {/*<MovieData userInput='Arrival' /> */}
                 <div className="watchlist">
                     <Grid>
-                        <Cell col={9}>
+                        <Cell col={9} phone={12} tablet={12}>
                             <h1>My Watchlist</h1>
                             {movies}
                         </Cell>
-                        <Cell col={3}>
+                        <Cell col={3} phone={12} tablet={12}>
                             <MovieData />
                         </Cell>
                     </Grid>
@@ -119,35 +119,25 @@ class NowPlaying extends Component {
 class MovieData extends Component {
     constructor(props) {
         super(props);
-        this.state = { movieData: [] }
-        this.fetchData = this.fetchData.bind(this);
+        this.state = {};
     }
-
-    // fetchData(searchTerm) {
-    //     var thisComponent = this;
-    //     var movies = [];
-    //     Controller.search(searchTerm)
-    //     .then((data) => {
-    //         movies = data.results.splice(0,5);
-    //         thisComponent.setState({movieData:movies})
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
-
-    fetchData() {
-        var thisComponent = this;
-        var movies = [];
+    componentDidMount() {
         NowPlayingController.search()
             .then((data) => {
-                movies = data.results.splice(0, 10);
-                thisComponent.setState({ movieData: movies })
+                var movies = data.results.splice(0, 10);
+                this.setState({ movieData: movies });
             })
             .catch((err) => console.log(err));
     }
+
     render() {
+        var nowPlaying = <p>Loading movies...</p>;
+        if(this.state.movieData) {
+            nowPlaying = <NowPlaying searchMovies={this.state.movieData} />;
+        }
         return (
             <div>
-                <NowPlaying fetchData={this.fetchData()} searchMovies={this.state.movieData} />
+                {nowPlaying}
             </div>
         );
     }
@@ -171,7 +161,7 @@ class Movies extends Component {
         watchlistRef.on('value', (snapshot) => {
             var watchlistArray = []; //could also do this processing in render
             var movieObjects = snapshot.val();
-            Object.keys(movieObjects).forEach(function(child) {
+            Object.keys(movieObjects).forEach(function (child) {
                 watchlistArray.push(movieObjects[child]); //make into an array
             });
             this.setState({ watchlist: watchlistArray });
@@ -294,7 +284,7 @@ class MovieCard extends Component {
             if (!idExists) {
                 saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">add_to_queue</i></button>
             } else {
-                saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="material-icons">indeterminate_check_box</i></button>
+                saved = <button className="btn btn-primary" onClick={() => this.saveMovie(this.props.MoviePoster, this.props.MovieTitle, this.props.MovieOverview, this.props.MovieId)}><p>Watchlist</p><i className="colored material-icons">indeterminate_check_box</i></button>
             }
         })
         favoriteRef.once('value', (snapshot) => {
@@ -303,7 +293,7 @@ class MovieCard extends Component {
             if (!idExists) {
                 favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite_border</i></button>
             } else {
-                favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons">favorite</i></button>
+                favorited = <button className="btn btn-primary" onClick={() => this.favoriteMovie(this.props.MovieId)}><p>Favorite</p><i className="material-icons colored">favorite</i></button>
             }
         })
 
@@ -320,9 +310,22 @@ class MovieCard extends Component {
                         <div className="cardSection">
                             <Link to={"/movie/" + this.props.MovieId}><h2>{this.props.MovieTitle}</h2></Link>
                             <p>{this.props.MovieOverview}</p>
-                            {saved}
+
+                            {/*{saved}
                             {favorited}
-                            <i onClick={this.updateMessage} className="material-icons">mail_outline</i>
+                            <i onClick={this.updateMessage} className="material-icons">mail_outline</i>*/}
+
+                            <div className="buttons">
+                                <button className="btn btn-primary trailer" onClick={() => this.saveMovie(this.props.MoviePoster)}>
+                                    <p>Watch Trailer</p>
+                                </button>
+                                {saved}
+                                {favorited}
+                                <button className="btn btn-primary adder send" onClick={() => { this.props.dialogCallback(); this.props.updateParent(); } }>
+                                    <i className="material-icons">mail_outline</i>
+                                </button>
+                            </div>
+
                         </div>
                     </Cell>
                 </Grid>

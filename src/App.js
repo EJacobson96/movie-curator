@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import './App.css';
 import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Button, Badge, Textfield } from 'react-mdl';
 import { Link, hashHistory } from 'react-router';
 import SignIn from './SignIn';
 import Inbox from './Inbox';
 import firebase from 'firebase';
+
+
 
 
 import Controller from './DataController'
@@ -59,6 +60,9 @@ class App extends Component {
       <div>
         <Layout fixedHeader fixedDrawer>
           <Header title="The Movie Curator" className="hideOnLarge">
+
+          </Header>
+          <Drawer title="The Movie Curator">
             <Textfield
               value=""
               onChange={() => { } }
@@ -66,9 +70,6 @@ class App extends Component {
               expandable
               expandableIcon="search"
               />
-          </Header>
-          <Drawer title="The Movie Curator">
-            
             <Navigation>
               <Link to="home">Home</Link>
               <Link to="watchlist">Movie Watchlist</Link>
