@@ -154,7 +154,7 @@ class DisplayFeaturedMovies extends Component {
             movieRow = this.state.movieData.map((movie) => {
                 return (
                     <Cell col={2} phone={12} tablet={3}>
-                        <Link to={'movie/' + movie.id}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + movie.poster_path} role='presentation' />
+                        <Link to={'movie/' + movie.id}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + movie.poster_path} alt={this.props.original_title} role='presentation' />
                         </Link>
                     </Cell>
                 );

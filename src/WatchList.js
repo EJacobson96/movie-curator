@@ -254,7 +254,7 @@ class MovieCard extends Component {
                 <Grid>
                     <Cell col={4}>
                         <div className="imgSection">
-                            <Link to={'movie/' + this.props.MovieId}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} role='presentation' /></Link>
+                            <Link to={'movie/' + this.props.MovieId}><img className="responsive-img" src={'https://image.tmdb.org/t/p/original/' + this.props.MoviePoster} alt={this.props.MovieTitle} role='presentation' /></Link>
                         </div>
                     </Cell>
 
