@@ -34,28 +34,6 @@ var controller = {
         // search by year only 
         if (year && !title && !genre) {
             searchURL = baseApiUrl + discover + '?api_key=' + apiKey + details + addYear + year;
-//         }
-// <<<<<<< HEAD
-
-//         //construct URL
-//         console.log("fetching", searchURL);
-
-//         return fetch(searchURL) //download the data
-//             .then(function (res) { return res.json(); })
-//     },
-
-//     // returns the poster url for a given movie
-//     //    pre: must take in a movie id
-//     getPosterUrl: function (movie) {
-//         if (movie.poster_path) {
-//             return baseImageUrl + movie.poster_path;
-//         }
-//         else {
-//             return ''; //don't load bad image'
-//         }
-//     }
-
-// =======
     }
     // search by year only 
     if (year && !title && !genre){
@@ -67,7 +45,6 @@ var controller = {
     return fetch(searchURL) //download the data
       .then(function(res) { return res.json(); })
   }
-// >>>>>>> ef921ca013f10251fb852900091e4a7ab31d4fdf
 };
 
 export default controller; //export object
