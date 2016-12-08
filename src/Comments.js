@@ -6,6 +6,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListIt
 
 import Controller from './DataController';
 
+// Component for displaying a list of comments for a movie
 class Comments extends React.Component {
     constructor(props) {
         super(props);
@@ -14,16 +15,20 @@ class Comments extends React.Component {
         this.updateState = this.updateState.bind(this);
     }
 
+    // Update the state when first mounted
     componentDidMount() {
         this.updateState(this.props);
     }
 
+    // If new props are received (new movie page is loaded), update the state
     componentWillReceiveProps(nextProps) {
         if (nextProps.movieId !== this.props.movieId) {
             this.updateState(nextProps);
         }
     }
 
+    // Updates the state of the component with the given props,
+    // setting the messages and the user
     updateState(props) {
         var inboxRef = firebase.database().ref('comments/' + props.movieId);
         inboxRef.on('value', (snapshot) => {
@@ -35,8 +40,8 @@ class Comments extends React.Component {
         });
     }
 
+    // render our Comments component with a post section, and comment list 
     render() {
-        console.log('rendering with state:', this.state);
         return (
             <div>
                 <PostComment currentUser={this.props.user} movieId={this.props.movieId} />
@@ -46,6 +51,7 @@ class Comments extends React.Component {
     }
 }
 
+// Displays a form for the user to post a new comment
 class PostComment extends React.Component {
     constructor(props) {
         super(props);
@@ -106,7 +112,9 @@ class PostComment extends React.Component {
     }
 }
 
+// Displays a list of comments
 class CommentList extends React.Component {
+    // render the list of comments with all of the messages for the movie
     render() {
         var messages = <p>Loading comments...</p>;
         if (this.props.messages && this.props.currentUser) {
@@ -126,6 +134,7 @@ class CommentList extends React.Component {
     }
 }
 
+// Displays a single comment, allowing you to delete your own
 class Comment extends React.Component {
     constructor(props) {
         super(props);
@@ -133,12 +142,12 @@ class Comment extends React.Component {
         this.deleteMessage = this.deleteMessage.bind(this);
     }
 
+    // Deletes the message from firebase
     deleteMessage() {
-        console.log('movie id', this.props.movieId);
-        console.log('message id', this.props.messageId);
         firebase.database().ref('comments/' + this.props.movieId + '/' + this.props.messageId).remove();
     }
 
+    // Render the single comment with the passed down message data
     render() {
         var content = this.props.message.content;
         var author = this.props.message.fromUserName;

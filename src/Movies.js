@@ -9,7 +9,8 @@ import Comments from './Comments';
 import { DisplayButtons } from './Watchlist';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, Cell, List, ListItem } from 'react-mdl';
 
-
+// Displays a movie page with detailed movie info for any movie
+//  pre: must be given a movie id
 class Movies extends React.Component {
     constructor(props) {
         super(props);
@@ -18,12 +19,14 @@ class Movies extends React.Component {
         this.handleCloseDialog = this.handleCloseDialog.bind(this);
     }
 
+    // Adjust state to open dialog
     handleOpenDialog() {
         this.setState({
             openDialog: true,
         });
     }
 
+    // Adjust state to close dialog
     handleCloseDialog() {
         this.setState({
             openDialog: false
@@ -33,6 +36,8 @@ class Movies extends React.Component {
         document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
+    // Send the message to the user
+    //  pre: takes in an input event whose value is a user's name
     sendMessage(event) {
         var movieId = document.querySelector('#recommendLink').href;
         movieId = movieId.substring(movieId.lastIndexOf('/') + 1);
@@ -64,15 +69,18 @@ class Movies extends React.Component {
         })
     }
 
+    // Adjust the state to include the username input's value
     updateUsername(event) {
         this.setState({ username: event.target.value })
     }
 
+    // sends a message and closes the dialog
     submitMessage(e) {
         this.sendMessage(e);
         this.handleCloseDialog();
     }
 
+    // When component mounts, fetch needed movie data and update state
     componentDidMount() {
         this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
@@ -102,8 +110,10 @@ class Movies extends React.Component {
                 this.setState({ cast: data.cast });
             });
 
+
     }
 
+    // unregister firebase listener when the component unmounts
     componentWillUnmount() {
         if (this.unregister) {
             this.unregister();
@@ -144,6 +154,7 @@ class Movies extends React.Component {
         }
     }
 
+    // render our movie page
     render() {
         var card = [];
         if (this.state.movie && this.state.cast && this.state.user) {
@@ -182,11 +193,11 @@ class Movies extends React.Component {
     }
 }
 
+// Displays a more detailed movie card for the given movie
+//  pre: requires a movie object
 class DetailedMovieCard extends React.Component {
-
+    // renders our component
     render() {
-
-
         var runtime = (parseInt(this.props.movie.runtime / 60)) + 'h ' + this.props.movie.runtime % 60 + 'm';
         var releaseDate = moment(this.props.movie.release_date).format('MMMM Do, YYYY');
 
@@ -211,15 +222,12 @@ class DetailedMovieCard extends React.Component {
 
                         <Cell col={9}>
                             <div className="trailerSection video-container">
-                                {/*<iframe width="560" height="315" src={"https://www.youtube.com/embed/" + this.props.trailer.key} frameborder="0" allowfullscreen></iframe>*/}
-
                                 <YouTube
                                     videoId={this.props.trailer.key}
                                     />
                             </div>
                         </Cell>
                     </Grid>
-
 
                     <Grid>
                         <Cell col={12}>
@@ -228,9 +236,7 @@ class DetailedMovieCard extends React.Component {
                                     <Cell col={6} tablet={12}>
                                         <Cell col={11} tablet={12}>
                                             <h2>{this.props.movie.original_title}</h2>
-
                                             <p className="contentParagraph">{releaseDate + ' • ' + genres + ' film • ' + runtime}</p>
-
                                             <p className="contentParagraph">{this.props.movie.overview}</p>
                                             <div className="buttons">
                                                 <DisplayButtons dialogCallback={this.props.dialogCallback} MoviePoster={this.props.movie.poster_path} MovieTitle={this.props.movie.original_title}

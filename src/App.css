@@ -130,8 +130,6 @@
 }
 
 #root .adder p {
-   /*float: left;*/
-   /*margin-right: 5px;*/
    display: inline;
 }
 

@@ -13,13 +13,12 @@ import Start from './Start';
 import RecommendedMoviePage from './RecommendedMoviesPage';
 import firebase from 'firebase';
 
+// import styles
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import './index.css';
-
-
 
 // Initialize Firebase
 var config = {
@@ -31,9 +30,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
-//localhost/search/titanic
-//localhost/search?q=titanic
-
+// Set up the routing for the website
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="start" component={Start}>

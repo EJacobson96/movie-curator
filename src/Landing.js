@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Grid, Cell } from 'react-mdl';
 import { Link, hashHistory } from 'react-router';
 
+// Import landing page css
 import './landing.css';
 
+// Displays a landing page for new users
 class Landing extends Component {
     render() {
         return (
@@ -16,7 +18,7 @@ class Landing extends Component {
     }
 }
 
-
+// Displays a header to be used on the landing page, and sign in/sign up pages
 class Header extends React.Component {
     render() {
         return (
@@ -33,6 +35,7 @@ class Header extends React.Component {
     }
 }
 
+// Displays an info section for new users to explore what the website does
 class Info extends React.Component {
     render() {
         return (
@@ -62,6 +65,7 @@ class Info extends React.Component {
     }
 }
 
+// Displays a pretty get started view :)
 class GetStarted extends React.Component {
     render() {
         return (

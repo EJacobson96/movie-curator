@@ -1,6 +1,7 @@
 var baseApiUrl = 'https://api.themoviedb.org/';
 var ApiKey = 'e5a950c4e6cdc4d9f08e95bd4bd1b68e';
 
+// Controller for fetching the now playing movies
 var controller = {
 
     search: function() {

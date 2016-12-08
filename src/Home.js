@@ -79,6 +79,8 @@ class Home extends Component {
         this.handleCloseDialog();
     }
 
+    // Get the user info when the component mounts and update state with data
+    // If user is not logged in, redirect to login screen
     componentDidMount() {
         this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
@@ -97,7 +99,7 @@ class Home extends Component {
         hashHistory.push('login');
     }
 
-
+    // Conditionally render our component, setting the content when the user is set in state 
     render() {
         var content = null;
         if (this.state.user) {
@@ -135,6 +137,7 @@ class DisplayFeaturedMovies extends Component {
         this.state = {};
     }
 
+    // Fetch now playing movies, and add them to state
     componentDidMount() {
         NowPlayingController.search()
             .then((data) => {
@@ -144,6 +147,8 @@ class DisplayFeaturedMovies extends Component {
             })
     }
 
+    // Conditionally render our component when the user, 
+    // top movie and other movies are set 
     render() {
         var topMovie = [];
         if (this.state.top && this.props.user) {
@@ -160,6 +165,7 @@ class DisplayFeaturedMovies extends Component {
                 );
             });
         }
+
         return (
             <div>
                 <Grid>
@@ -181,7 +187,5 @@ class DisplayFeaturedMovies extends Component {
         )
     }
 }
-
-
 
 export default Home;

@@ -5,6 +5,7 @@ import Landing, { Header } from './Landing';
 
 import './landing.css';
 
+// Displays a starting Component that subsumes the landing, login and signin
 class Start extends Component {
     render() {
         return (
@@ -15,6 +16,5 @@ class Start extends Component {
         );
     }
 }
-
 
 export default Start;

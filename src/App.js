@@ -12,6 +12,7 @@ import Controller from './DataController'
 
 import 'whatwg-fetch';
 
+// Overarching app component that contains navigation around the child components
 class App extends Component {
     constructor(props) {
         super(props);
@@ -29,10 +30,13 @@ class App extends Component {
         firebase.auth().signOut();
     }
 
+    // Get the user info when the component mounts and update state with data
+    // If user is not logged in, redirect to login screen
     componentDidMount() {
         this.unregister = firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.setState({
+                    user: firebaseUser,
                     userId: firebaseUser.uid
                 });
             } else {
@@ -41,28 +45,36 @@ class App extends Component {
         });
     }
 
+    // Unregister the firebase listener when the component is unmounted
     componentWillUnmount() {
         if (this.unregister) {
             this.unregister();
         }
     }
 
+    // Adjust the state to open the inbox dialog
     handleOpenInbox() {
         this.setState({ openInbox: true });
     }
 
+    // Adjust the state to close the inbox dialog
     handleCloseInbox() {
         this.setState({ openInbox: false });
+        // Necessary to fix a bug with React-MDL's Dialog component
+        // https://github.com/react-mdl/react-mdl/issues/253
         document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = 'auto';
         document.getElementsByClassName('mdl-layout__inner-container')[0].style.overflowX = '';
     }
 
+    // Adjust the state to the event's target
     handleSearchChange(event) {
         var titleSearch = event.target.value;
         this.setState({ title: titleSearch });
     }
 
+    // Redirect the user to the advanced search page with a the input's search query
     handleSearch(event) {
+        // If enter key is pressed, search
         if (event.charCode === 13) {
             event.preventDefault();
             //go to the advanced search page
@@ -70,12 +82,16 @@ class App extends Component {
         }
     }
 
+    // Render the main App component
     render() {
+        // Conditionally render the logout button to show the name, and the inbox, once the 
+        // user data is set
         var logout = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out</Link>;
-        if (this.state.userId) {
-            var name = firebase.auth().currentUser.displayName;
-            logout = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out, {name.split(' ')[0]}</Link>;
+        if (this.state.user) {
+            logout = <Link onClick={() => { this.signOut() } } className="signOut">Sign Out{', ' + this.state.user.displayName.split(' ')[0]}</Link>;
+            var inbox = <Inbox updateParent={this.updateState} userId={this.state.user.uid} />;
         }
+
         return (
             <div>
                 <Layout fixedHeader fixedDrawer>
@@ -96,13 +112,7 @@ class App extends Component {
                             <Link to="watchlist" activeClassName="activeLink">Movie Watchlist</Link>
                             <Link to="search" activeClassName="activeLink">Advanced Search</Link>
                         </Navigation>
-                        {/*<div id="badgeContainer">
-                            <Badge id="inboxBadge" text="..." overlap>
-                                <Link onClick={() => { this.handleOpenInbox() } }>
-                                    <i className="fa fa-inbox" aria-hidden="true"></i>
-                                </Link>
-                            </Badge>
-                        </div>*/}
+
                         <div className="bottomNav">
                             <div id="badgeContainer">
                                 <Badge id="inboxBadge" text="..." overlap>
@@ -123,7 +133,7 @@ class App extends Component {
                 <Dialog open={this.state.openInbox}>
                     <DialogTitle>Inbox</DialogTitle>
                     <DialogContent>
-                        <Inbox updateParent={this.updateState} userId={this.state.userId} />
+                        {inbox}
                     </DialogContent>
                     <DialogActions>
                         <Button type='button' onClick={this.handleCloseInbox}>Close</Button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router';
 import firebase from 'firebase';
-import { Grid, Cell } from 'react-mdl';
+import { Grid, Cell, Snackbar } from 'react-mdl';
 
 
 /**
@@ -156,7 +156,7 @@ class ValidationErrors extends React.Component {
           <p className="help-block">Not an email address!</p>
         }
         {this.props.errors.minLength &&
-          <p className="help-block">Must be at least {this.props.errors.minLength}characters.</p>
+          <p className="help-block">Must be at least {this.props.errors.minLength} characters.</p>
         }
       </div>
     );
