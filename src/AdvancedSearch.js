@@ -3,8 +3,7 @@ import { Link, hashHistory } from 'react-router';
 import { Form, FormControl, InputGroup, Button, Glyphicon, FormGroup, ControlLabel } from 'react-bootstrap';
 import firebase from 'firebase';
 import MovieController from './MovieController';
-import { DisplayMovies } from './WatchList';
-import { PleaseWork, MovieCard } from './WatchList';
+import { DisplayMovies, PleaseWork, MovieCard } from './Watchlist';
 import { Grid, Cell } from 'react-mdl';
 
 // import './App.css';
