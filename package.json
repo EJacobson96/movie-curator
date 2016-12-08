@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "http://OwenFlannigan.github.io/movie-curator",
   "devDependencies": {
+    "gh-pages": "^0.12.0",
     "react-scripts": "0.7.0"
   },
   "dependencies": {
