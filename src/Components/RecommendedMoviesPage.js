@@ -156,7 +156,7 @@ class RecommendedMovies extends Component {
                 DataController.getRecommended(movieId)
                     .then((data) => {
                         var movies;
-                        if (0 == 1) {//data.results.length > 0) {
+                        if (data.results.length > 0) {
                             movies = _.shuffle(data.results);
                             this.setState({ movieData: movies.slice(1, 7), recommended: movies[0].id });
                         } else { // in case there are no recommendations for a given movie, use favorites
