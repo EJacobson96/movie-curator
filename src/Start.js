@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Cell } from 'react-mdl';
 import { Link, hashHistory } from 'react-router';
-import Landing, { Header } from './Landing';
+import Landing, { Header } from './Components/Landing';
 
 import './landing.css';
 

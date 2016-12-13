@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
-import SignInForm from './SignIn';
-import SignUpForm from './SignUp';
-import Watchlist from './Watchlist';
-import Home from'./Home';
-import AdvancedSearch from './AdvancedSearch';
-import Movies from './Movies';
-import Landing from './Landing';
+import SignInForm from './Components/SignIn';
+import SignUpForm from './Components/SignUp';
+import Watchlist from './Components/Watchlist';
+import Home from'./Components/Home';
+import AdvancedSearch from './Components/AdvancedSearch';
+import Movies from './Components/Movies';
+import Landing from './Components/Landing';
 import Start from './Start';
-import RecommendedMoviePage from './RecommendedMoviesPage';
+import RecommendedMoviePage from './Components/RecommendedMoviesPage';
 import firebase from 'firebase';
 
 // import styles
@@ -18,7 +18,6 @@ import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import './index.css';
 
 // Initialize Firebase
 var config = {

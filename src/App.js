@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import { Layout, Header, Navigation, Drawer, Content, Dialog, DialogActions, DialogContent, DialogTitle, Badge, Textfield } from 'react-mdl';
 import { Link, hashHistory } from 'react-router';
-import SignIn from './SignIn';
-import Inbox from './Inbox';
+import SignIn from './Components/SignIn';
+import Inbox from './Components/Inbox';
 import firebase from 'firebase';
-import AdvancedSearch from './AdvancedSearch';
+import AdvancedSearch from './Components/AdvancedSearch';
 import { Form, FormControl, InputGroup, Button, Glyphicon, FormGroup, ControlLabel } from 'react-bootstrap';
 
 import Controller from './DataController'
