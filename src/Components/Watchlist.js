@@ -332,7 +332,7 @@ class DisplayButtons extends Component {
 
     //if the clicked on movie is already in favorites, this method removes it from firebase. Otherwise,
     //it adds the movie to firebase
-    favoriteMovie(id) {
+    favoriteMovie(id, poster) {
         var idRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited/' + id);
         idRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
@@ -340,7 +340,8 @@ class DisplayButtons extends Component {
             if (!idExists) {
                 var userRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited/' + id);
                 var newMovie = {
-                    id: id
+                    id: id,
+                    poster_path: poster
                 }
                 idRef.set(newMovie);
             } else {
@@ -395,7 +396,7 @@ class DisplayButtons extends Component {
                     <p>Watchlist</p>
                     {savedIcon}
                 </button>
-                <button className="btn btn-primary adder" onClick={() => this.favoriteMovie(this.props.MovieId)}>
+                <button className="btn btn-primary adder" onClick={() => this.favoriteMovie(this.props.MovieId, this.props.MoviePoster)}>
                     <p>Favorite</p>
                     {favoritedIcon}
                 </button>

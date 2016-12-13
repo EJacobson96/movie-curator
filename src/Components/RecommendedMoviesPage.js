@@ -155,8 +155,14 @@ class RecommendedMovies extends Component {
                 movieId = movieIdArray[randNum];
                 DataController.getRecommended(movieId)
                     .then((data) => {
-                        var movies = _.shuffle(data.results);
-                        this.setState({ movieData: movies.slice(1, 7), recommended: movies[0].id });
+                        var movies;
+                        if (0 == 1) {//data.results.length > 0) {
+                            movies = _.shuffle(data.results);
+                            this.setState({ movieData: movies.slice(1, 7), recommended: movies[0].id });
+                        } else { // in case there are no recommendations for a given movie, use favorites
+                            movies = _.shuffle(movieObject);
+                            this.setState({ movieData: movies.slice(1, 7), recommended: movies[0].id });
+                        }
 
                         Controller.getMovieDetails(this.state.recommended)
                             .then((data) => {
@@ -175,6 +181,7 @@ class RecommendedMovies extends Component {
                             .then((data) => {
                                 this.setState({ cast: data.cast });
                             });
+
                     })
                     .catch((err) => console.log(err));
             }
