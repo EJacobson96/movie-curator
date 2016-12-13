@@ -213,7 +213,7 @@ class WatchlistMovies extends Component {
             var watchlistArray = []; //could also do this processing in render
             var movieObjects = snapshot.val();
             if (movieObjects) {
-                Object.keys(movieObjects).forEach(function(child) {
+                Object.keys(movieObjects).forEach(function (child) {
                     watchlistArray.push(movieObjects[child]); //make into an array
                 });
             }
@@ -336,7 +336,10 @@ class DisplayButtons extends Component {
         var idRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited/' + id);
         idRef.once('value', (snapshot) => {
             var movieObject = snapshot.val();
-            var idExists = this.checkId(id, movieObject);
+            console.log(movieObject);
+            // var idExists = this.checkId(id, movieObject);
+            var idExists = _.includes(movieObject, id);
+            console.log('idExists', idExists);
             if (!idExists) {
                 var userRef = firebase.database().ref('users/' + this.props.user.uid + '/Favorited/' + id);
                 var newMovie = {
@@ -345,7 +348,7 @@ class DisplayButtons extends Component {
                 }
                 idRef.set(newMovie);
             } else {
-                idRef.remove();
+                firebase.database().ref('users/' + this.props.user.uid + '/Favorited/' + id).remove();
             }
         })
         this.setState({});
@@ -357,7 +360,9 @@ class DisplayButtons extends Component {
             return false;
         }
         var keys = Object.keys(obj);
+        console.log('keys', keys);
         for (var i = 0; i < keys.length; i++) {
+            // console.log(keys[i]);
             if (keys[i] == movieId) {
                 return true;
             }
